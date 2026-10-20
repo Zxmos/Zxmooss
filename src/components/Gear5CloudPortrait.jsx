@@ -26,10 +26,10 @@ const GEAR5_SPARKS = [
  */
 export default function Gear5CloudPortrait({ theme, transitionState }) {
   const [lightSrc, setLightSrc] = useState(
-    PERSONAL_INFO.profilePhotoLight || '/images/profile-headphones.webp'
+    PERSONAL_INFO.profilePhotoLight || './images/profile-headphones.webp'
   );
   const [darkSrc, setDarkSrc] = useState(
-    PERSONAL_INFO.profilePhotoDark || '/images/profile-strawhat.jpg'
+    PERSONAL_INFO.profilePhotoDark || './images/profile-strawhat.jpg'
   );
 
   // Preload both portraits on mount for instantaneous zero-flicker switching
@@ -41,16 +41,16 @@ export default function Gear5CloudPortrait({ theme, transitionState }) {
   }, [lightSrc, darkSrc]);
 
   const handleLightError = () => {
-    if (lightSrc !== '/images/profile-headphones.png') {
-      setLightSrc('/images/profile-headphones.png');
+    if (lightSrc !== './images/profile-headphones.png') {
+      setLightSrc('./images/profile-headphones.png');
     } else if (lightSrc !== PERSONAL_INFO.githubAvatar) {
       setLightSrc(PERSONAL_INFO.githubAvatar);
     }
   };
 
   const handleDarkError = () => {
-    if (darkSrc !== '/images/profile-strawhat.png') {
-      setDarkSrc('/images/profile-strawhat.png');
+    if (darkSrc !== './images/profile-strawhat.png') {
+      setDarkSrc('./images/profile-strawhat.png');
     } else if (darkSrc !== PERSONAL_INFO.githubAvatar) {
       setDarkSrc(PERSONAL_INFO.githubAvatar);
     }

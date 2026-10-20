@@ -15,9 +15,9 @@ export const PERSONAL_INFO = {
   heroHeading: "Building the Future, Inspired by Tradition.",
   heroIntro:
     "I explore the intersection of software, electronics, embedded systems, and creative technology. Through experimentation and hands-on projects, I turn ideas into working solutions while continuing to grow as an engineer and developer.",
-  profilePhoto: "/images/profile-headphones.webp",
-  profilePhotoLight: "/images/profile-headphones.webp",
-  profilePhotoDark: "/images/profile-strawhat.jpg",
+  profilePhoto: "./images/profile-headphones.webp",
+  profilePhotoLight: "./images/profile-headphones.webp",
+  profilePhotoDark: "./images/profile-strawhat.jpg",
   githubAvatar: "https://avatars.githubusercontent.com/u/188826483?v=4",
   sealText: "杜", // Stylized seal mark (Hanko)
 };
