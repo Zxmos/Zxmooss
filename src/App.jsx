@@ -12,15 +12,18 @@ import ScrollFooter from './components/ScrollFooter';
 import WaveDivider from './components/WaveDivider';
 import { useThemeTransition } from './hooks/useThemeTransition';
 import { useGitHubProfile } from './hooks/useGitHubProfile';
+import { useGear5Sound } from './hooks/useGear5Sound';
 
 export default function App() {
+  const { soundEnabled, toggleSound, playSoundOnNightActivation } = useGear5Sound();
+
   const {
     theme,
     isTransitioning,
     transitionState,
     announcement,
     toggleTheme,
-  } = useThemeTransition();
+  } = useThemeTransition(playSoundOnNightActivation);
 
   const githubData = useGitHubProfile();
 
@@ -61,16 +64,22 @@ export default function App() {
       {/* Deterministic Bidirectional Growing Bamboo Scroll Indicator (2-12 segments) */}
       <BambooScrollIndicator minSegments={2} maxSegments={12} />
 
-      {/* Traditional Scroll Navigation Header */}
+      {/* Traditional Scroll Navigation Header with Gear 5 Sound Toggle */}
       <ScrollNavbar
         theme={theme}
         onToggleTheme={toggleTheme}
         isTransitioning={isTransitioning}
+        soundEnabled={soundEnabled}
+        onToggleSound={toggleSound}
       />
 
       {/* Main Living Painting Scroll */}
       <main id="main-content">
-        <HeroSection theme={theme} githubData={githubData} />
+        <HeroSection
+          theme={theme}
+          transitionState={transitionState}
+          githubData={githubData}
+        />
 
         <WaveDivider variant="primary" />
 

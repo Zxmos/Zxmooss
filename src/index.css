@@ -315,6 +315,47 @@ button:focus-visible {
   transform: translateY(-1px);
 }
 
+.sound-scroll-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.75rem;
+  background: var(--bg-scroll-panel);
+  border: 1.5px solid var(--border-strong);
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.84rem;
+  border-radius: 3px;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.3s ease, color 0.2s ease;
+}
+
+.sound-scroll-toggle:hover {
+  border-color: var(--gold-accent);
+  transform: translateY(-1px);
+}
+
+.sound-scroll-toggle.sound-active {
+  border-color: var(--bamboo-green);
+  color: var(--ink-strong);
+}
+
+.sound-scroll-toggle.sound-active .sound-toggle-icon {
+  color: var(--gold-accent);
+}
+
+.sound-scroll-toggle.sound-muted {
+  opacity: 0.72;
+  color: var(--ink-muted);
+  border-color: var(--border-ink);
+}
+
+.sound-toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .theme-toggle-orb {
   display: inline-flex;
   align-items: center;
@@ -1103,6 +1144,299 @@ button:focus-visible {
   text-align: center;
 }
 
+/* ==========================================================================
+   GEAR 5 CLOUD TRANSFORMATION PORTRAIT & HAGOROMO SCARF
+   ========================================================================== */
+.gear5-portrait-container {
+  position: relative;
+  width: 255px;
+  height: 255px;
+  margin: 0 auto 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+/* Floating Idle Animation */
+.gear5-portrait-container {
+  animation: gear5FloatIdle 5.5s ease-in-out infinite alternate;
+}
+
+/* Hagoromo Cloud Scarf (Flowing Celestial Clouds) */
+.gear5-hagoromo-wrapper {
+  position: absolute;
+  inset: -28px;
+  width: calc(100% + 56px);
+  height: calc(100% + 56px);
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.65s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.gear5-cloud-scarf-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.gear5-aura-backdrop {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Day Mode: Restrained, soft translucent cloud border */
+.gear5-mode-day .gear5-hagoromo-wrapper {
+  opacity: 0.38;
+  transform: scale(0.94);
+  filter: drop-shadow(0 4px 12px rgba(170, 137, 82, 0.18));
+}
+
+.gear5-mode-day .gear5-cloud-outer-swirl path {
+  fill: #FFFDF8;
+  stroke: var(--antique-gold);
+  stroke-width: 1.5;
+  opacity: 0.88;
+}
+
+/* Night Mode: FULL GEAR 5 MODE (Vibrant billowing white clouds + vapor glow) */
+.gear5-mode-night .gear5-hagoromo-wrapper {
+  opacity: 1;
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.72))
+          drop-shadow(0 0 32px rgba(232, 221, 197, 0.45))
+          drop-shadow(0 0 48px rgba(158, 51, 40, 0.25));
+  animation: gear5HagoromoDrift 7s ease-in-out infinite alternate;
+}
+
+.gear5-mode-night .gear5-cloud-inner-drift {
+  animation: gear5HagoromoSwirl 18s linear infinite;
+  transform-origin: 170px 170px;
+}
+
+/* Dynamic Transformation Sequence: Day -> Night */
+.gear5-transforming-to-night {
+  animation: gear5ContainerRecoil 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.gear5-transforming-to-night .gear5-hagoromo-wrapper {
+  animation: gear5TransformSequence 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.gear5-transforming-to-night .gear5-spark-burst-stage .gear5-particle {
+  animation: gear5SparkBurst 1.25s cubic-bezier(0.12, 1, 0.24, 1) forwards;
+}
+
+/* Dynamic Reverse Sequence: Night -> Day */
+.gear5-transforming-to-day .gear5-hagoromo-wrapper {
+  animation: gear5DisperseToDay 1.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Center Photo Frame (The Portrait) */
+.gear5-photo-frame {
+  position: relative;
+  width: 184px;
+  height: 184px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gear5-inner-halo {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2.5px solid #FFFFFF;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.65),
+              inset 0 0 8px rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  z-index: 3;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.gear5-mode-day .gear5-inner-halo {
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 10px rgba(170, 137, 82, 0.25);
+}
+
+.gear5-image-clipper {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-canvas-alt);
+  position: relative;
+  z-index: 2;
+}
+
+/* Portrait photograph with Straw Hat - perfectly cropped on face & hat */
+.gear5-actual-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  transform: scale(1.04);
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.gear5-mode-night .gear5-actual-portrait {
+  filter: contrast(1.05) brightness(1.02);
+}
+
+/* Hanko Seal Badge on Frame */
+.gear5-hanko-seal {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  z-index: 4;
+  width: 32px;
+  height: 32px;
+  background: var(--seal-red);
+  color: #FFFDF8;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #FFFFFF;
+  border-radius: 3px;
+  transform: rotate(3deg);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+  transition: transform 0.3s ease;
+}
+
+.gear5-mode-night .gear5-hanko-seal {
+  box-shadow: 0 0 10px rgba(158, 51, 40, 0.75), 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Ruby Sparks Twinkle */
+.ruby-spark {
+  animation: rubyTwinkle 3.2s ease-in-out infinite alternate;
+}
+
+.s-1 { animation-delay: 0.3s; }
+.s-2 { animation-delay: 1.2s; }
+.s-3 { animation-delay: 0.8s; }
+
+/* Gear 5 Particle Sparks Burst Stage */
+.gear5-spark-burst-stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gear5-particle {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background: var(--color);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.part-cloud {
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+}
+
+.part-spark {
+  box-shadow: 0 0 8px var(--seal-red);
+}
+
+/* Animations */
+@keyframes gear5FloatIdle {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-7px) rotate(0.4deg); }
+}
+
+@keyframes gear5HagoromoDrift {
+  0% { transform: scale(1.03) rotate(0deg); }
+  50% { transform: scale(1.06) rotate(1.5deg); }
+  100% { transform: scale(1.04) rotate(-1.5deg); }
+}
+
+@keyframes gear5HagoromoSwirl {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes gear5ContainerRecoil {
+  0% { transform: scale(1); }
+  22% { transform: scale(0.94) rotate(-2deg); }
+  50% { transform: scale(1.08) rotate(2deg); }
+  78% { transform: scale(1.02) rotate(-0.5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes gear5TransformSequence {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.85) rotate(-15deg);
+    filter: drop-shadow(0 0 0px transparent);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.22) rotate(8deg);
+    filter: drop-shadow(0 0 28px #FFFFFF) drop-shadow(0 0 45px var(--seal-red));
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.08) rotate(-4deg);
+    filter: drop-shadow(0 0 20px #FFFFFF) drop-shadow(0 0 35px rgba(232, 221, 197, 0.5));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.05) rotate(0deg);
+    filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.72))
+            drop-shadow(0 0 32px rgba(232, 221, 197, 0.45));
+  }
+}
+
+@keyframes gear5DisperseToDay {
+  0% {
+    opacity: 1;
+    transform: scale(1.08) rotate(0deg);
+  }
+  40% {
+    opacity: 0.8;
+    transform: scale(1.15) rotate(6deg);
+  }
+  100% {
+    opacity: 0.38;
+    transform: scale(0.94) rotate(0deg);
+  }
+}
+
+@keyframes gear5SparkBurst {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.2);
+  }
+  24% {
+    opacity: 1;
+    transform: translate(calc(var(--dx) * 0.55), calc(var(--dy) * 0.55)) scale(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.15);
+  }
+}
+
+@keyframes rubyTwinkle {
+  0% { opacity: 0.4; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1.35); }
+}
+
+/* Fallback for enso-portrait-wrapper */
 .enso-portrait-wrapper {
   position: relative;
   width: 225px;

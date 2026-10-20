@@ -9,8 +9,9 @@ import {
   Code2,
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+import Gear5CloudPortrait from './Gear5CloudPortrait';
 
-export default function HeroSection({ theme, githubData }) {
+export default function HeroSection({ theme, transitionState, githubData }) {
   const [imgSrc, setImgSrc] = useState(PERSONAL_INFO.profilePhoto);
   const isNight = theme === 'night';
   const ghProfile = githubData?.profile;
@@ -290,51 +291,18 @@ export default function HeroSection({ theme, githubData }) {
 
             <div className="scroll-parchment-panel">
               <span className="kakejiku-subtitle-tag">
-                Computer Engineering Kakejiku • 掛軸
+                {isNight
+                  ? 'Gear 5 Liberation Form • ギア5'
+                  : 'Computer Engineering Kakejiku • 掛軸'}
               </span>
 
-              {/* Hand-drawn SVG Ensō (Zen Ink Brush Circle) surrounding portrait */}
-              <div className="enso-portrait-wrapper">
-                <svg
-                  viewBox="0 0 260 260"
-                  className="enso-brush-ring"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M 130,16 C 195,14 246,66 244,132 C 242,196 188,246 124,244 C 60,242 14,190 18,125 C 21,72 58,28 108,19"
-                    fill="none"
-                    stroke="var(--ink-strong)"
-                    strokeWidth="7.5"
-                    strokeLinecap="round"
-                    strokeDasharray="680 40"
-                  />
-                  <path
-                    d="M 130,24 C 190,24 236,72 234,132 C 232,190 184,236 124,234 C 66,232 24,184 26,125"
-                    fill="none"
-                    stroke="var(--gold-accent)"
-                    strokeWidth="1.6"
-                    strokeDasharray="12 8"
-                    opacity="0.75"
-                  />
-                </svg>
-
-                <div className="portrait-image-container">
-                  <img
-                    src={imgSrc}
-                    onError={handleImageError}
-                    alt="Portrait of Mark Anthony L. Duhig Jr., Computer Engineering Student"
-                    className="portrait-photograph"
-                  />
-                </div>
-
-                {/* Red Artist Seal Stamp (Hanko) */}
-                <div
-                  className="portrait-hanko-stamp"
-                  title="Mark Anthony L. Duhig Jr. — Artist & Engineer Seal"
-                >
-                  <span>{PERSONAL_INFO.sealText}</span>
-                </div>
-              </div>
+              {/* Gear 5 Cloud Frame & Straw Hat Portrait */}
+              <Gear5CloudPortrait
+                theme={theme}
+                transitionState={transitionState}
+                imgSrc={imgSrc}
+                onImageError={handleImageError}
+              />
 
               <div className="portrait-scroll-caption">
                 <p className="caption-name">{PERSONAL_INFO.name}</p>

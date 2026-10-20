@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sun, Moon, Menu, X } from 'lucide-react';
+import { Sun, Moon, Menu, X, Volume2, VolumeX } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
 const NAV_ITEMS = [
@@ -15,6 +15,8 @@ export default function ScrollNavbar({
   theme,
   onToggleTheme,
   isTransitioning,
+  soundEnabled = true,
+  onToggleSound,
 }) {
   const [activeSection, setActiveSection] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -81,8 +83,29 @@ export default function ScrollNavbar({
           </ul>
         </nav>
 
-        {/* Theme Toggle + Mobile Menu Trigger */}
+        {/* Sound Toggle + Theme Toggle + Mobile Menu Trigger */}
         <div className="header-controls">
+          {onToggleSound && (
+            <button
+              type="button"
+              onClick={onToggleSound}
+              className={`sound-scroll-toggle ${soundEnabled ? 'sound-active' : 'sound-muted'}`}
+              aria-label={soundEnabled ? 'Mute Gear 5 transformation sound' : 'Enable Gear 5 transformation sound'}
+              title={
+                soundEnabled
+                  ? 'Sound Active: Gear 5 transformation SFX enabled'
+                  : 'Sound Muted: Click to enable transformation SFX'
+              }
+            >
+              <span className="sound-toggle-icon" aria-hidden="true">
+                {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+              </span>
+              <span className="sound-toggle-text">
+                {soundEnabled ? 'SFX On' : 'Mute'}
+              </span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={onToggleTheme}

@@ -29,7 +29,7 @@ function getInitialTheme() {
  * - SWITCHING: viewport is 100% covered; palette swaps seamlessly behind the cloud curtain
  * - REVEALING: clouds part smoothly in opposite directions to reveal the new theme
  */
-export function useThemeTransition() {
+export function useThemeTransition(onNightActivation) {
   const [theme, setTheme] = useState(getInitialTheme);
   const [machineState, setMachineState] = useState('IDLE');
   const [transitionMeta, setTransitionMeta] = useState({
@@ -68,6 +68,11 @@ export function useThemeTransition() {
 
     const nextTheme = theme === 'day' ? 'night' : 'day';
     const direction = nextTheme === 'night' ? 'to-night' : 'to-day';
+
+    // Synchronously trigger Gear 5 transformation sound when entering night mode
+    if (nextTheme === 'night' && typeof onNightActivation === 'function') {
+      onNightActivation();
+    }
 
     const prefersReducedMotion =
       window.matchMedia &&
@@ -111,7 +116,7 @@ export function useThemeTransition() {
     }, 1500);
 
     timersRef.current = [switchTimer, revealTimer, idleTimer];
-  }, [theme, machineState, clearTimers]);
+  }, [theme, machineState, clearTimers, onNightActivation]);
 
   return {
     theme,
