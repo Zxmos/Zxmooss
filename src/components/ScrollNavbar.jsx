@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sun, Moon, Menu, X, Volume2, VolumeX } from 'lucide-react';
+import { Sun, Moon, Menu, X, Volume2, VolumeX, Square } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
 const NAV_ITEMS = [
@@ -16,7 +16,9 @@ export default function ScrollNavbar({
   onToggleTheme,
   isTransitioning,
   soundEnabled = true,
+  isPlaying = false,
   onToggleSound,
+  onStopSound,
 }) {
   const [activeSection, setActiveSection] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -51,7 +53,11 @@ export default function ScrollNavbar({
     <header className={`scroll-header ${isScrolled ? 'header-scrolled' : ''}`}>
       <div className="scroll-container header-inner">
         {/* Brand Identity + Traditional Red Hanko Seal */}
-        <a href="#home" className="scroll-brand" aria-label="Mark Anthony L. Duhig Jr. — Home">
+        <a
+          href="#home"
+          className="scroll-brand"
+          aria-label="Mark Anthony L. Duhig Jr. — Home"
+        >
           <span className="hanko-seal" aria-hidden="true">
             {PERSONAL_INFO.sealText}
           </span>
@@ -74,7 +80,6 @@ export default function ScrollNavbar({
                     aria-current={isActive ? 'page' : undefined}
                   >
                     <span className="nav-label-text">{item.label}</span>
-                    {/* Subtle bamboo node / brushstroke underline */}
                     <span className="nav-brush-accent" aria-hidden="true" />
                   </a>
                 </li>
@@ -83,18 +88,37 @@ export default function ScrollNavbar({
           </ul>
         </nav>
 
-        {/* Sound Toggle + Theme Toggle + Mobile Menu Trigger */}
+        {/* Sound Controls + Theme Toggle + Mobile Menu Trigger */}
         <div className="header-controls">
+          {isPlaying && onStopSound && (
+            <button
+              type="button"
+              onClick={onStopSound}
+              className="sound-stop-btn"
+              aria-label="Stop soundtrack playback"
+              title="Stop Grand Line / Gear 5 audio playback"
+            >
+              <Square size={12} fill="currentColor" />
+              <span>Stop</span>
+            </button>
+          )}
+
           {onToggleSound && (
             <button
               type="button"
               onClick={onToggleSound}
-              className={`sound-scroll-toggle ${soundEnabled ? 'sound-active' : 'sound-muted'}`}
-              aria-label={soundEnabled ? 'Mute Gear 5 transformation sound' : 'Enable Gear 5 transformation sound'}
+              className={`sound-scroll-toggle ${
+                soundEnabled ? 'sound-active' : 'sound-muted'
+              }`}
+              aria-label={
+                soundEnabled
+                  ? 'Disable theme soundtrack'
+                  : 'Enable theme soundtrack'
+              }
               title={
                 soundEnabled
-                  ? 'Sound Active: Gear 5 transformation SFX enabled'
-                  : 'Sound Muted: Click to enable transformation SFX'
+                  ? 'Sound Active: One Piece / Gear 5 theme plays on Dark Mode'
+                  : 'Sound Muted: Click to enable theme soundtrack'
               }
             >
               <span className="sound-toggle-icon" aria-hidden="true">
@@ -113,13 +137,13 @@ export default function ScrollNavbar({
             className="theme-scroll-toggle"
             aria-label={
               isNight
-                ? 'Switch to Day theme (Sunlit Parchment)'
-                : 'Switch to Night theme (Midnight Sumi Ink)'
+                ? 'Switch to Light theme (Headphones Portrait & Sunlit Parchment)'
+                : 'Switch to Dark theme (Straw-Hat Gear 5 Portrait & Midnight Ink)'
             }
             title={
               isNight
-                ? 'Return to Daylight Scroll'
-                : 'Enter Midnight Ink Scroll'
+                ? 'Return to Light Mode (Headphones Portrait)'
+                : 'Enter Dark Mode (Straw-Hat Gear 5 Transformation)'
             }
           >
             <span className="theme-toggle-orb" aria-hidden="true">
@@ -135,7 +159,9 @@ export default function ScrollNavbar({
             className="mobile-menu-btn"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             aria-expanded={mobileMenuOpen}
-            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-label={
+              mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'
+            }
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>

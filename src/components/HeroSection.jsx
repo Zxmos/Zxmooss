@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ArrowDownRight,
   ExternalLink,
@@ -12,16 +12,9 @@ import { PERSONAL_INFO } from '../data/portfolioData';
 import Gear5CloudPortrait from './Gear5CloudPortrait';
 
 export default function HeroSection({ theme, transitionState, githubData }) {
-  const [imgSrc, setImgSrc] = useState(PERSONAL_INFO.profilePhoto);
   const isNight = theme === 'night';
   const ghProfile = githubData?.profile;
   const ghStatus = githubData?.status;
-
-  const handleImageError = () => {
-    if (imgSrc !== PERSONAL_INFO.githubAvatar) {
-      setImgSrc(PERSONAL_INFO.githubAvatar);
-    }
-  };
 
   return (
     <section id="home" className="hero-scroll-section">
@@ -296,12 +289,10 @@ export default function HeroSection({ theme, transitionState, githubData }) {
                   : 'Computer Engineering Kakejiku • 掛軸'}
               </span>
 
-              {/* Gear 5 Cloud Frame & Straw Hat Portrait */}
+              {/* Dual Portrait: Headphones (Light Mode) <-> Straw Hat Gear 5 (Dark Mode) */}
               <Gear5CloudPortrait
                 theme={theme}
                 transitionState={transitionState}
-                imgSrc={imgSrc}
-                onImageError={handleImageError}
               />
 
               <div className="portrait-scroll-caption">

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
 // Deterministic Gear 5 transformation particle sparks (white vapor puffs + ruby-red liberation sparks)
@@ -15,32 +15,52 @@ const GEAR5_SPARKS = [
 ];
 
 /**
- * Gear 5-Inspired Cloud Transformation Portrait Component
+ * Dual-Portrait Gear 5 Cloud Transformation Component
  *
- * Features:
- * - Real photo of Mark Anthony L. Duhig Jr. wearing the straw hat, cropped sharply to the face.
- * - Flowing white Hagoromo (celestial cloud scarf) inspired by Luffy's Gear 5.
- * - Dynamic transformation sequence when switching Day -> Night mode:
- *   1. Cloud Arrival
- *   2. Cloud Expansion & Swirl
- *   3. White & Ruby-Red Particle Burst
- *   4. Settle into animated floating cloud border in Night Mode
- * - Gentle floating idle animation.
- * - Reversible when toggling back to Day mode.
- * - Respects prefers-reduced-motion.
+ * - Light Mode (Day): Displays Mark's headphones portrait (./images/profile-headphones.png)
+ *   with a restrained cloud border and aged-canvas / ruby-red accents.
+ * - Dark Mode (Night): Displays Mark's straw-hat portrait (./images/profile-strawhat.png)
+ *   with the animated white Gear 5 cloud border (Hagoromo), floating particles, and ruby sparks.
+ * - Preloads both portraits in memory and keeps both mounted in stacked layers so swapping
+ *   during the cloud transition has 0ms decode lag and zero layout shift.
  */
-export default function Gear5CloudPortrait({
-  theme,
-  transitionState,
-  imgSrc,
-  onImageError,
-}) {
+export default function Gear5CloudPortrait({ theme, transitionState }) {
+  const [lightSrc, setLightSrc] = useState(
+    PERSONAL_INFO.profilePhotoLight || './images/profile-headphones.png'
+  );
+  const [darkSrc, setDarkSrc] = useState(
+    PERSONAL_INFO.profilePhotoDark || './images/profile-strawhat.png'
+  );
+
+  // Preload both portraits on mount for instantaneous zero-flicker switching
+  useEffect(() => {
+    const imgLight = new Image();
+    imgLight.src = lightSrc;
+    const imgDark = new Image();
+    imgDark.src = darkSrc;
+  }, [lightSrc, darkSrc]);
+
+  const handleLightError = () => {
+    if (lightSrc !== './images/profile-headphones.webp') {
+      setLightSrc('./images/profile-headphones.webp');
+    } else if (lightSrc !== PERSONAL_INFO.githubAvatar) {
+      setLightSrc(PERSONAL_INFO.githubAvatar);
+    }
+  };
+
+  const handleDarkError = () => {
+    if (darkSrc !== './images/profile-strawhat.jpg') {
+      setDarkSrc('./images/profile-strawhat.jpg');
+    } else if (darkSrc !== PERSONAL_INFO.githubAvatar) {
+      setDarkSrc(PERSONAL_INFO.githubAvatar);
+    }
+  };
+
   const isNight = theme === 'night';
-  const isTransforming = transitionState?.active;
+  const isTransforming = Boolean(transitionState?.active);
   const isToNight = transitionState?.direction === 'to-night';
   const isToDay = transitionState?.direction === 'to-day';
 
-  // Status classes for CSS animations
   const transformationClass = useMemo(() => {
     if (isTransforming && isToNight) {
       return 'gear5-transforming-to-night';
@@ -55,7 +75,11 @@ export default function Gear5CloudPortrait({
     <div
       className={`gear5-portrait-container ${transformationClass}`}
       role="figure"
-      aria-label="Portrait of Mark Anthony L. Duhig Jr. with Gear 5 celestial cloud border"
+      aria-label={
+        isNight
+          ? 'Portrait of Mark Anthony L. Duhig Jr. wearing straw hat with Gear 5 cloud border'
+          : 'Portrait of Mark Anthony L. Duhig Jr. wearing headphones'
+      }
     >
       {/* Outer Floating Gear 5 Cloud Hagoromo Scarf (SVG Organic Billowing Clouds) */}
       <div className="gear5-hagoromo-wrapper" aria-hidden="true">
@@ -65,7 +89,6 @@ export default function Gear5CloudPortrait({
           preserveAspectRatio="xMidYMid meet"
         >
           <defs>
-            {/* Soft Celestial White & Ivory Cloud Gradient */}
             <linearGradient id="gear5CloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#FFFFFF" />
               <stop offset="55%" stopColor="#FFFDF7" />
@@ -79,7 +102,6 @@ export default function Gear5CloudPortrait({
               <stop offset="100%" stopColor="transparent" stopOpacity="0" />
             </radialGradient>
 
-            {/* Cloud Filter for Dreamy Soft Vapor Glow */}
             <filter id="gear5VaporGlow" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="3.5" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
@@ -97,7 +119,6 @@ export default function Gear5CloudPortrait({
 
           {/* Primary Swirling Cloud Scarf (Hagoromo 飛衣) Outer Ring */}
           <g className="gear5-cloud-outer-swirl" filter="url(#gear5VaporGlow)">
-            {/* Lobe 1: Top-Right Billow */}
             <path
               d="M170,30 C215,22 255,48 274,86 C292,122 284,158 266,182 C252,200 248,222 260,244 C272,266 260,294 234,306 C206,318 175,302 162,284 C150,268 135,274 120,290 C96,312 60,306 44,280 C28,252 40,220 62,204 C78,192 84,172 74,154 C60,130 68,98 94,82 C116,68 144,78 158,95 C164,102 172,100 174,90 C178,65 158,35 170,30 Z"
               fill="url(#gear5CloudGrad)"
@@ -106,7 +127,6 @@ export default function Gear5CloudPortrait({
               strokeWidth="2.5"
             />
 
-            {/* Inner Flowing Vapor Curl Shading */}
             <path
               d="M176,46 C210,40 245,62 258,94 C270,124 260,150 244,170 C228,190 226,215 238,236 C248,255 238,278 218,288 C195,298 170,286 160,270"
               fill="none"
@@ -142,7 +162,6 @@ export default function Gear5CloudPortrait({
               opacity="0.85"
             />
 
-            {/* Ruby-Red Flame-Sparks (Mugiwara Ribbon & Liberation motif) */}
             <circle cx="282" cy="115" r="4.2" fill="var(--seal-red)" className="ruby-spark s-1" />
             <circle cx="58" cy="235" r="3.8" fill="var(--seal-red)" className="ruby-spark s-2" />
             <circle cx="240" cy="275" r="3.2" fill="var(--gold-accent)" className="ruby-spark s-3" />
@@ -150,25 +169,46 @@ export default function Gear5CloudPortrait({
         </svg>
       </div>
 
-      {/* Center Portrait Image Frame (Strictly Centered & Face 100% Clear) */}
+      {/* Center Portrait Image Frame (Dual Preloaded Portraits: Headphones in Day, Straw-Hat in Night) */}
       <div className="gear5-photo-frame">
-        {/* Ensō / Cloud Inset Rim */}
         <div className="gear5-inner-halo" aria-hidden="true" />
 
         <div className="gear5-image-clipper">
+          {/* Light Mode Portrait: Headphones Photograph */}
           <img
-            src={imgSrc}
-            onError={onImageError}
-            alt="Portrait of Mark Anthony L. Duhig Jr. wearing straw hat"
-            className="gear5-actual-portrait"
+            src={lightSrc}
+            onError={handleLightError}
+            alt="Mark Anthony L. Duhig Jr. wearing headphones (Light Mode portrait)"
+            className={`gear5-actual-portrait portrait-layer-light ${
+              !isNight ? 'portrait-layer-active' : 'portrait-layer-hidden'
+            }`}
             loading="eager"
+          />
+
+          {/* Dark Mode Portrait: Straw-Hat Photograph */}
+          <img
+            src={darkSrc}
+            onError={handleDarkError}
+            alt="Mark Anthony L. Duhig Jr. wearing straw hat (Dark Mode Gear 5 portrait)"
+            className={`gear5-actual-portrait portrait-layer-dark ${
+              isNight ? 'portrait-layer-active' : 'portrait-layer-hidden'
+            }`}
+            loading="eager"
+          />
+
+          {/* Local Cloud Curtain that veils the portrait during the exact swap moment */}
+          <div
+            className={`portrait-swap-cloud-veil ${
+              isTransforming ? 'veil-covering' : ''
+            }`}
+            aria-hidden="true"
           />
         </div>
 
         {/* Hanko Seal Badge (Ruby Red) */}
         <div
           className="gear5-hanko-seal"
-          title="Mark Anthony L. Duhig Jr. — Straw Hat Engineer Seal"
+          title="Mark Anthony L. Duhig Jr. — Engineer Seal"
           aria-hidden="true"
         >
           <span>{PERSONAL_INFO.sealText}</span>

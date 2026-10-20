@@ -1,6 +1,7 @@
 import React from 'react';
 import ScrollNavbar from './components/ScrollNavbar';
 import CloudTransition from './components/CloudTransition';
+import CloudCursor from './components/CloudCursor';
 import BambooScrollIndicator from './components/BambooScrollIndicator';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
@@ -15,7 +16,14 @@ import { useGitHubProfile } from './hooks/useGitHubProfile';
 import { useGear5Sound } from './hooks/useGear5Sound';
 
 export default function App() {
-  const { soundEnabled, toggleSound, playSoundOnNightActivation } = useGear5Sound();
+  const {
+    soundEnabled,
+    isPlaying,
+    toggleSound,
+    stopSound,
+    playSoundOnNightActivation,
+    stopSoundOnDayActivation,
+  } = useGear5Sound();
 
   const {
     theme,
@@ -23,7 +31,10 @@ export default function App() {
     transitionState,
     announcement,
     toggleTheme,
-  } = useThemeTransition(playSoundOnNightActivation);
+  } = useThemeTransition({
+    onNightActivation: playSoundOnNightActivation,
+    onDayActivation: stopSoundOnDayActivation,
+  });
 
   const githubData = useGitHubProfile();
 
@@ -33,6 +44,9 @@ export default function App() {
       <div className="sr-only-live" aria-live="polite" aria-atomic="true">
         {announcement}
       </div>
+
+      {/* Custom Cloud Cursor Follower (Desktop fine-pointer only) */}
+      <CloudCursor theme={theme} />
 
       {/* Global SVG Filters for Aged Parchment Grain & Imperfect Sumi-e Brush Edges */}
       <svg className="svg-Hidden-defs" aria-hidden="true">
@@ -64,13 +78,15 @@ export default function App() {
       {/* Deterministic Bidirectional Growing Bamboo Scroll Indicator (2-12 segments) */}
       <BambooScrollIndicator minSegments={2} maxSegments={12} />
 
-      {/* Traditional Scroll Navigation Header with Gear 5 Sound Toggle */}
+      {/* Traditional Scroll Navigation Header with Gear 5 Sound Toggle & Stop Control */}
       <ScrollNavbar
         theme={theme}
         onToggleTheme={toggleTheme}
         isTransitioning={isTransitioning}
         soundEnabled={soundEnabled}
+        isPlaying={isPlaying}
         onToggleSound={toggleSound}
+        onStopSound={stopSound}
       />
 
       {/* Main Living Painting Scroll */}

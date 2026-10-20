@@ -26,10 +26,10 @@ function getInitialTheme() {
  * Explicit States:
  * - IDLE: normal page interaction, overlay unmounted
  * - COVERING: multi-layer Japanese Kasumi clouds sweep in from left & right to cover 100% of viewport
- * - SWITCHING: viewport is 100% covered; palette swaps seamlessly behind the cloud curtain
- * - REVEALING: clouds part smoothly in opposite directions to reveal the new theme
+ * - SWITCHING: viewport is 100% covered; palette & dual profile portrait swap seamlessly behind the cloud curtain
+ * - REVEALING: clouds part smoothly in opposite directions to reveal the new theme & portrait
  */
-export function useThemeTransition(onNightActivation) {
+export function useThemeTransition({ onNightActivation, onDayActivation } = {}) {
   const [theme, setTheme] = useState(getInitialTheme);
   const [machineState, setMachineState] = useState('IDLE');
   const [transitionMeta, setTransitionMeta] = useState({
@@ -69,9 +69,11 @@ export function useThemeTransition(onNightActivation) {
     const nextTheme = theme === 'day' ? 'night' : 'day';
     const direction = nextTheme === 'night' ? 'to-night' : 'to-day';
 
-    // Synchronously trigger Gear 5 transformation sound when entering night mode
+    // Synchronously trigger or fade-out soundtrack based on target theme
     if (nextTheme === 'night' && typeof onNightActivation === 'function') {
       onNightActivation();
+    } else if (nextTheme === 'day' && typeof onDayActivation === 'function') {
+      onDayActivation();
     }
 
     const prefersReducedMotion =
@@ -82,30 +84,30 @@ export function useThemeTransition(onNightActivation) {
       setTheme(nextTheme);
       setAnnouncement(
         nextTheme === 'night'
-          ? 'Night theme enabled (Midnight Sumi Ink)'
-          : 'Day theme enabled (Sunlit Aged Parchment)'
+          ? 'Dark mode enabled (Straw-Hat Gear 5 Portrait & Midnight Ink)'
+          : 'Light mode enabled (Headphones Portrait & Sunlit Aged Parchment)'
       );
       return;
     }
 
     clearTimers();
 
-    // Phase 1: COVERING (0ms -> 560ms) — Kasumi clouds converge from both sides to occlude 100% of screen
+    // Phase 1: COVERING (0ms -> 560ms) — Kasumi clouds converge from both sides to occlude 100% of screen & portrait
     setTransitionMeta({ direction, targetTheme: nextTheme });
     setMachineState('COVERING');
 
-    // Phase 2: SWITCHING (560ms -> 820ms) — 100% covered; swap palette while curtain is locked
+    // Phase 2: SWITCHING (560ms -> 820ms) — 100% covered; swap palette & profile picture while curtain is locked
     const switchTimer = window.setTimeout(() => {
       setMachineState('SWITCHING');
       setTheme(nextTheme);
       setAnnouncement(
         nextTheme === 'night'
-          ? 'Night theme enabled (Midnight Sumi Ink)'
-          : 'Day theme enabled (Sunlit Aged Parchment)'
+          ? 'Dark mode enabled (Straw-Hat Gear 5 Portrait & Midnight Ink)'
+          : 'Light mode enabled (Headphones Portrait & Sunlit Aged Parchment)'
       );
     }, 560);
 
-    // Phase 3: REVEALING (820ms -> 1500ms) — clouds part smoothly to unveil the transformed scroll
+    // Phase 3: REVEALING (820ms -> 1500ms) — clouds part smoothly to unveil the transformed portrait & scroll
     const revealTimer = window.setTimeout(() => {
       setMachineState('REVEALING');
     }, 820);
@@ -116,7 +118,7 @@ export function useThemeTransition(onNightActivation) {
     }, 1500);
 
     timersRef.current = [switchTimer, revealTimer, idleTimer];
-  }, [theme, machineState, clearTimers, onNightActivation]);
+  }, [theme, machineState, clearTimers, onNightActivation, onDayActivation]);
 
   return {
     theme,

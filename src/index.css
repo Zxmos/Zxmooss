@@ -344,10 +344,96 @@ button:focus-visible {
   color: var(--gold-accent);
 }
 
+.sound-scroll-toggle.sound-playing {
+  border-color: var(--seal-red);
+  box-shadow: 0 0 12px rgba(158, 51, 40, 0.35);
+}
+
+.sound-playing-pulse {
+  animation: soundPulseGlow 1.1s ease-in-out infinite alternate;
+  color: var(--seal-red) !important;
+}
+
+@keyframes soundPulseGlow {
+  0% { transform: scale(0.95); opacity: 0.78; }
+  100% { transform: scale(1.16); opacity: 1; }
+}
+
+.sound-stop-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.68rem;
+  background: rgba(158, 51, 40, 0.16);
+  border: 1.5px solid var(--seal-red);
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  border-radius: 3px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.sound-stop-btn:hover {
+  background: var(--seal-red);
+  color: #FFFDF8;
+  transform: translateY(-1px);
+}
+
 .sound-scroll-toggle.sound-muted {
   opacity: 0.72;
   color: var(--ink-muted);
   border-color: var(--border-ink);
+}
+
+/* Custom Cloud Cursor Follower (Desktop fine-pointer only) */
+.custom-cloud-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 38px;
+  height: 26px;
+  margin-left: 10px;
+  margin-top: 12px;
+  pointer-events: none;
+  z-index: 9998;
+  will-change: transform, opacity;
+  transition: opacity 0.25s ease;
+}
+
+.custom-cloud-cursor.cursor-hidden {
+  opacity: 0;
+}
+
+.custom-cloud-cursor.cursor-visible {
+  opacity: 0.9;
+}
+
+.cloud-cursor-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 2px 6px rgba(23, 23, 20, 0.22));
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
+}
+
+.cursor-mode-night .cloud-cursor-svg {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.65))
+          drop-shadow(0 0 14px rgba(158, 51, 40, 0.4));
+}
+
+.cursor-hover-interactive .cloud-cursor-svg {
+  transform: scale(1.22) rotate(-4deg);
+}
+
+.cursor-clicking .cloud-cursor-svg {
+  transform: scale(0.86);
+}
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .custom-cloud-cursor {
+    display: none !important;
+  }
 }
 
 .sound-toggle-icon {
@@ -1117,10 +1203,16 @@ button:focus-visible {
   display: inline-block;
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--gold-accent);
   margin-bottom: 0.85rem;
+  transition: color 0.35s ease;
+}
+
+.kakejiku-night-tag {
+  color: var(--ink-strong);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
 }
 
 .scroll-wooden-rod {
@@ -1272,19 +1364,64 @@ button:focus-visible {
   z-index: 2;
 }
 
-/* Portrait photograph with Straw Hat - perfectly cropped on face & hat */
+/* Dual Theme-Synchronized Portraits (Stacked for Zero Layout Shift) */
 .gear5-actual-portrait {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 20%;
   display: block;
-  transform: scale(1.04);
-  transition: transform 0.4s ease, filter 0.4s ease;
+  transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.48s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.42s ease;
 }
 
-.gear5-mode-night .gear5-actual-portrait {
+/* Light Mode Portrait: Headphones Photograph */
+.portrait-layer-light {
+  object-position: center 22%;
+}
+
+/* Dark Mode Portrait: One Piece Straw Hat Photograph */
+.portrait-layer-dark {
+  object-position: center 18%;
   filter: contrast(1.05) brightness(1.02);
+}
+
+.gear5-actual-portrait.portrait-active {
+  opacity: 1;
+  transform: scale(1.03);
+  z-index: 2;
+}
+
+.gear5-actual-portrait.portrait-inactive {
+  opacity: 0;
+  transform: scale(0.95);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Local Cloud Puff Veil Covering Portrait During Theme Swap */
+.portrait-swap-cloud-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 253, 248, 0.92) 0%,
+    rgba(232, 221, 197, 0.72) 58%,
+    transparent 100%
+  );
+  transform: scale(0.75);
+  transition: opacity 0.32s ease, transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.portrait-swap-cloud-veil.veil-active {
+  opacity: 1;
+  transform: scale(1.12);
 }
 
 /* Hanko Seal Badge on Frame */
@@ -2632,9 +2769,14 @@ button:focus-visible {
   box-shadow: var(--shadow-scroll);
 }
 
+.contact-header-block {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
 .contact-invitation-heading {
   font-family: var(--font-display);
-  font-size: clamp(1.65rem, 2.8vw, 2.35rem);
+  font-size: clamp(1.85rem, 3.2vw, 2.65rem);
   font-weight: 800;
   color: var(--ink-strong);
   max-width: 680px;
@@ -2642,18 +2784,71 @@ button:focus-visible {
 }
 
 .contact-invitation-sub {
-  max-width: 620px;
+  max-width: 640px;
   margin: 0 auto;
   font-size: 0.98rem;
   color: var(--ink-muted);
 }
 
+/* Siddz-Inspired Two-Column Contact Layout (Form + Direct Channels) */
+.contact-siddz-layout {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+  text-align: left;
+  align-items: start;
+}
+
+.contact-form-panel {
+  background: var(--bg-canvas);
+  border: 1.5px solid var(--border-strong);
+  border-top: 3px solid var(--seal-red);
+  padding: 2rem;
+  box-shadow: var(--shadow-scroll);
+}
+
+.contact-form-header {
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed var(--border-ink);
+}
+
+.contact-form-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.contact-panel-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--ink-strong);
+}
+
+.contact-panel-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  margin-top: 0.15rem;
+}
+
+.ruby-highlight-text {
+  color: var(--seal-red);
+  font-weight: 600;
+}
+
+[data-theme="night"] .ruby-highlight-text {
+  color: var(--gold-accent);
+}
+
 .contact-topic-selector {
-  margin-top: 1.4rem;
+  margin-bottom: 1.35rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.55rem;
+  align-items: flex-start;
+  gap: 0.5rem;
 }
 
 .topic-selector-label {
@@ -2667,7 +2862,6 @@ button:focus-visible {
 .topic-pills-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 0.45rem;
 }
 
@@ -2676,7 +2870,7 @@ button:focus-visible {
   font-family: var(--font-mono);
   font-size: 0.74rem;
   color: var(--ink-body);
-  background: var(--bg-canvas);
+  background: var(--bg-canvas-alt);
   border: 1px solid var(--border-strong);
   border-radius: 3px;
   transition: all 0.2s ease;
@@ -2687,9 +2881,166 @@ button:focus-visible {
 }
 
 .topic-pill-btn.topic-active {
-  background: var(--bamboo-deep);
-  color: #F5EFE2;
-  border-color: var(--bamboo-deep);
+  background: var(--seal-red);
+  color: #FFFDF8;
+  border-color: var(--seal-red);
+}
+
+/* Sumi Contact Form Fields */
+.sumi-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.form-row-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+}
+
+.form-field-label {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-strong);
+}
+
+.ruby-required {
+  color: var(--seal-red);
+}
+
+.sumi-form-input,
+.sumi-form-textarea {
+  width: 100%;
+  padding: 0.72rem 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  color: var(--ink-strong);
+  background: var(--bg-canvas-alt);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 3px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.sumi-form-textarea {
+  resize: vertical;
+  min-height: 118px;
+  line-height: 1.55;
+}
+
+.sumi-form-input::placeholder,
+.sumi-form-textarea::placeholder {
+  color: var(--ink-muted);
+  opacity: 0.65;
+}
+
+.sumi-form-input:focus,
+.sumi-form-textarea:focus {
+  outline: none;
+  border-color: var(--seal-red);
+  box-shadow: 0 0 0 3px rgba(158, 51, 40, 0.16);
+  background: var(--bg-canvas);
+}
+
+.sumi-form-input.input-error,
+.sumi-form-textarea.input-error {
+  border-color: var(--seal-red);
+  background: rgba(158, 51, 40, 0.06);
+}
+
+.form-error-text {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  color: var(--seal-red);
+}
+
+[data-theme="night"] .form-error-text {
+  color: #E57368;
+}
+
+/* Status Banner (Success / Honest Error Fallback) */
+.form-status-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.95rem 1.1rem;
+  border-radius: 3px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.form-status-banner.status-success {
+  background: rgba(102, 116, 83, 0.16);
+  border: 1.5px solid var(--bamboo-green);
+  color: var(--ink-strong);
+}
+
+.form-status-banner.status-error {
+  background: rgba(158, 51, 40, 0.12);
+  border: 1.5px solid var(--seal-red);
+  color: var(--ink-strong);
+}
+
+.status-banner-icon {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.status-success .status-banner-icon {
+  color: var(--bamboo-green);
+}
+
+.status-error .status-banner-icon {
+  color: var(--seal-red);
+}
+
+.status-banner-content strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.96rem;
+  margin-bottom: 0.2rem;
+}
+
+.status-fallback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+
+.form-submit-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 0.35rem;
+}
+
+.form-submit-btn {
+  flex: 1;
+  justify-content: center;
+  min-width: 210px;
+}
+
+.form-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Right Column Direct Contact Channels */
+.contact-channels-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
 }
 
 .contact-cards-grid {
@@ -2707,6 +3058,11 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.contact-card-featured {
+  border-color: var(--border-strong);
+  border-left: 3.5px solid var(--seal-red);
 }
 
 .contact-scroll-card:hover {
@@ -2731,6 +3087,12 @@ button:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+.contact-seal-icon.seal-ruby {
+  background: var(--seal-red);
+  color: #FFFDF8;
 }
 
 .contact-ext-icon {
@@ -2769,7 +3131,12 @@ button:focus-visible {
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: auto;
-  padding-top: 0.5rem;
+  padding-top: 0.75rem;
+}
+
+.copy-success-btn {
+  border-color: var(--bamboo-green) !important;
+  color: var(--bamboo-green) !important;
 }
 
 /* ==========================================================================
@@ -2865,7 +3232,8 @@ button:focus-visible {
 @media (max-width: 980px) {
   .hero-grid,
   .about-scroll-layout,
-  .project-scroll-masterpiece {
+  .project-scroll-masterpiece,
+  .contact-siddz-layout {
     grid-template-columns: 1fr;
   }
 
@@ -2914,8 +3282,13 @@ button:focus-visible {
   }
 
   .project-problem-role-grid,
-  .hero-highlights-grid {
+  .hero-highlights-grid,
+  .form-row-two-col {
     grid-template-columns: 1fr;
+  }
+
+  .contact-form-panel {
+    padding: 1.4rem 1.15rem;
   }
 
   .architecture-flow-strip {

@@ -15,9 +15,21 @@ export const PERSONAL_INFO = {
   heroHeading: "Building the Future, Inspired by Tradition.",
   heroIntro:
     "I explore the intersection of software, electronics, embedded systems, and creative technology. Through experimentation and hands-on projects, I turn ideas into working solutions while continuing to grow as an engineer and developer.",
-  profilePhoto: "./profile.webp",
+  profilePhoto: "./images/profile-headphones.png",
+  profilePhotoLight: "./images/profile-headphones.png",
+  profilePhotoDark: "./images/profile-strawhat.png",
   githubAvatar: "https://avatars.githubusercontent.com/u/188826483?v=4",
   sealText: "杜", // Stylized seal mark (Hanko)
+};
+
+export const CONTACT_CONFIG = {
+  destinationEmail: "markanthonylduhigjr@gmail.com",
+  // Optional: set VITE_WEB3FORMS_ACCESS_KEY or VITE_FORMSPREE_ENDPOINT in .env for custom transactional delivery.
+  // Defaults to FormSubmit AJAX endpoint for markanthonylduhigjr@gmail.com.
+  formSubmitAjaxUrl: "https://formsubmit.co/ajax/markanthonylduhigjr@gmail.com",
+  web3FormsUrl: "https://api.web3forms.com/submit",
+  soundtrackPath: "./audio/one-piece-to-the-grand-line.mp3",
+  fallbackSoundtrackPath: "./audio/gear5-transformation.mp3",
 };
 
 export const SKILL_CATEGORIES = [
