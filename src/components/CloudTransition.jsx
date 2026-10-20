@@ -1,119 +1,176 @@
 import React from 'react';
 
 /**
- * Full-Screen Ink-Cloud & Sumi-Smoke Theme Transition Component
+ * Gallery-Grade Japanese Kasumi (霞) & Sumi-e Ink Cloud Transition Overlay
  *
- * - Covers 100% of the viewport (navigation, banner, content, and artwork) during theme switch.
- * - Uses layered Japanese clouds, irregular sumi-ink washes, warm ivory, charcoal black,
- *   muted gray, and subtle bamboo-green accents moving at different speeds.
- * - Theme swap occurs while the clouds completely cover the viewport, preventing any abrupt flash.
- * - Unmounts completely once finished so no invisible overlay blocks clicks.
+ * State Machine Phases (driven by useThemeTransition):
+ * - COVERING: Left & right traditional Kasumi cloud banks + upper/lower ink mist converge to cover 100% of viewport.
+ * - SWITCHING: Full-viewport occlusion holds while the Day/Night palette swaps seamlessly with zero flicker.
+ * - REVEALING: Cloud banks part along opposite vectors, unveiling the newly transformed painting before unmounting.
  */
 export default function CloudTransition({ transitionState }) {
-  const { active, direction, targetTheme } = transitionState;
+  const { active, phase = 'COVERING', direction, targetTheme } = transitionState;
 
   if (!active) return null;
 
   const isToNight = direction === 'to-night' || targetTheme === 'night';
+  const phaseClass = `phase-${phase.toLowerCase()}`;
 
   return (
     <div
       className={`ink-transition-stage ${
         isToNight ? 'direction-to-night' : 'direction-to-day'
-      }`}
+      } ${phaseClass}`}
       aria-hidden="true"
     >
-      {/* Full-viewport opaque ink & parchment wash curtain at peak coverage */}
+      {/* Full-viewport ink & parchment wash curtain guaranteeing 100% occlusion during SWITCHING */}
       <div className="ink-wash-veil" />
 
-      {/* Layer 1: Upper Sumi-e Cloud Canopy */}
-      <div className="ink-cloud-band band-top">
+      {/* Wing 1 (Left-to-Center): Traditional Layered Kasumi Scroll Clouds & Ink Billows */}
+      <div className="kasumi-cloud-wing wing-left">
         <svg
-          viewBox="0 0 1600 600"
+          viewBox="0 0 1200 900"
           preserveAspectRatio="none"
-          className="cloud-svg"
+          className="kasumi-wing-svg"
         >
+          <defs>
+            <linearGradient id="kasumiGradLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="var(--cloud-layer-primary)" stopOpacity="1" />
+              <stop offset="82%" stopColor="var(--cloud-layer-primary)" stopOpacity="1" />
+              <stop offset="96%" stopColor="var(--cloud-layer-secondary)" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="var(--cloud-layer-secondary)" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+
+          {/* Deep Back Ink-Wash Cloud Bank */}
           <path
-            d="M-160,0 L1760,0 L1760,440 C1520,560 1290,510 1060,410 C840,540 560,550 320,420 C140,510 -20,490 -160,390 Z"
-            fill="var(--cloud-layer-primary)"
+            d="M0,0 L1060,0 C1140,75 1020,145 1095,220 C1175,295 1040,380 1120,455 C1190,530 1050,615 1130,695 C1185,765 1065,835 1110,900 L0,900 Z"
+            fill="url(#kasumiGradLeft)"
           />
+
+          {/* Secondary Sculpted Ukiyo-e Kasumi Cloud Band */}
           <path
-            d="M-140,0 L1740,0 L1740,360 C1460,470 1180,450 930,340 C690,460 410,440 160,330 C20,410 -80,380 -140,310 Z"
+            d="M0,60 L920,60 C995,60 1030,115 975,155 C925,190 1045,215 1065,280 C1085,345 960,385 1015,445 C1070,505 1095,580 1010,635 C940,680 1045,745 990,810 L0,840 Z"
             fill="var(--cloud-layer-secondary)"
-            opacity="0.9"
+            opacity="0.92"
           />
-        </svg>
-      </div>
 
-      {/* Layer 2: Center Full-Viewport Billowing Traditional Japanese Cloud Scroll */}
-      <div className="ink-cloud-band band-center">
-        <svg
-          viewBox="0 0 1600 900"
-          preserveAspectRatio="none"
-          className="cloud-svg"
-        >
-          {/* Solid core body ensuring 100% viewport occlusion at mid-transition */}
-          <rect
-            x="-150"
-            y="80"
-            width="1900"
-            height="740"
-            fill="var(--cloud-layer-primary)"
-          />
-          {/* Organic billowing upper & lower cloud contours */}
-          <circle cx="180" cy="160" r="240" fill="var(--cloud-layer-primary)" />
-          <circle cx="520" cy="120" r="280" fill="var(--cloud-layer-secondary)" />
-          <circle cx="890" cy="135" r="290" fill="var(--cloud-layer-primary)" />
-          <circle cx="1260" cy="150" r="270" fill="var(--cloud-layer-secondary)" />
-          <circle cx="1520" cy="180" r="240" fill="var(--cloud-layer-primary)" />
+          {/* Traditional Japanese Horizontal Kasumi Cloud Strips (霞) */}
+          <g className="kasumi-scroll-bars" opacity="0.88">
+            <path
+              d="M-40,185 L840,185 C895,185 920,215 880,235 C850,250 935,255 935,285 C935,315 885,325 820,325 L-40,325 Z"
+              fill="var(--cloud-layer-primary)"
+              stroke="var(--cloud-layer-accent)"
+              strokeWidth="1.8"
+            />
+            <path
+              d="M-40,540 L890,540 C950,540 975,570 930,595 C895,612 985,620 985,650 C985,682 925,692 860,692 L-40,692 Z"
+              fill="var(--cloud-layer-primary)"
+              stroke="var(--cloud-layer-accent)"
+              strokeWidth="1.8"
+            />
+          </g>
 
-          <circle cx="240" cy="740" r="250" fill="var(--cloud-layer-secondary)" />
-          <circle cx="640" cy="770" r="290" fill="var(--cloud-layer-primary)" />
-          <circle cx="1040" cy="760" r="280" fill="var(--cloud-layer-secondary)" />
-          <circle cx="1410" cy="735" r="250" fill="var(--cloud-layer-primary)" />
-
-          {/* Subtle Bamboo-Green & Antique-Gold / Moonlight Mist Ribbons */}
+          {/* Gold-Leaf (Kimpaku) & Bamboo Mist Brush Filaments */}
           <path
-            d="M-100,430 C220,310 540,530 880,410 C1180,300 1420,490 1700,390"
+            d="M40,260 C280,210 520,310 820,245 C920,222 995,260 1045,250"
             stroke="var(--cloud-layer-accent)"
-            strokeWidth="18"
+            strokeWidth="5"
             strokeLinecap="round"
             fill="none"
-            opacity="0.45"
+            opacity="0.65"
           />
           <path
-            d="M-80,520 C260,620 610,420 960,540 C1240,630 1460,470 1680,530"
+            d="M80,625 C340,680 590,575 870,635 C955,655 1015,625 1060,635"
             stroke="var(--bamboo-green)"
-            strokeWidth="12"
+            strokeWidth="4"
             strokeLinecap="round"
             fill="none"
-            opacity="0.4"
+            opacity="0.55"
           />
         </svg>
       </div>
 
-      {/* Layer 3: Lower Rising Ink Mist & Mountain Fog Bank */}
-      <div className="ink-cloud-band band-bottom">
+      {/* Wing 2 (Right-to-Center): Mirroring Layered Kasumi Scroll Clouds & Ink Billows */}
+      <div className="kasumi-cloud-wing wing-right">
         <svg
-          viewBox="0 0 1600 600"
+          viewBox="0 0 1200 900"
           preserveAspectRatio="none"
-          className="cloud-svg"
+          className="kasumi-wing-svg"
         >
+          <defs>
+            <linearGradient id="kasumiGradRight" x1="100%" y1="0%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="var(--cloud-layer-primary)" stopOpacity="1" />
+              <stop offset="82%" stopColor="var(--cloud-layer-primary)" stopOpacity="1" />
+              <stop offset="96%" stopColor="var(--cloud-layer-secondary)" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="var(--cloud-layer-secondary)" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+
+          {/* Deep Back Ink-Wash Cloud Bank */}
           <path
-            d="M-160,600 L1760,600 L1760,170 C1510,60 1240,90 980,210 C730,70 450,80 190,200 C30,120 -70,140 -160,220 Z"
-            fill="var(--cloud-layer-primary)"
+            d="M1200,0 L140,0 C60,75 180,145 105,220 C25,295 160,380 80,455 C10,530 150,615 70,695 C15,765 135,835 90,900 L1200,900 Z"
+            fill="url(#kasumiGradRight)"
+          />
+
+          {/* Secondary Sculpted Ukiyo-e Kasumi Cloud Band */}
+          <path
+            d="M1200,50 L280,50 C205,50 170,110 225,150 C275,185 155,215 135,280 C115,345 240,385 185,445 C130,505 105,580 190,635 C260,680 155,745 210,815 L1200,845 Z"
+            fill="var(--cloud-layer-secondary)"
+            opacity="0.92"
+          />
+
+          {/* Traditional Japanese Horizontal Kasumi Cloud Strips (霞) */}
+          <g className="kasumi-scroll-bars" opacity="0.88">
+            <path
+              d="M1240,340 L340,340 C285,340 260,370 300,390 C330,405 245,410 245,440 C245,470 295,480 360,480 L1240,480 Z"
+              fill="var(--cloud-layer-primary)"
+              stroke="var(--cloud-layer-accent)"
+              strokeWidth="1.8"
+            />
+            <path
+              d="M1240,680 L390,680 C330,680 305,710 350,735 C385,752 295,760 295,790 C295,822 355,832 420,832 L1240,832 Z"
+              fill="var(--cloud-layer-primary)"
+              stroke="var(--cloud-layer-accent)"
+              strokeWidth="1.8"
+            />
+          </g>
+
+          {/* Gold-Leaf (Kimpaku) & Bamboo Mist Brush Filaments */}
+          <path
+            d="M1160,410 C920,360 680,460 380,395 C280,372 205,410 155,400"
+            stroke="var(--cloud-layer-accent)"
+            strokeWidth="5"
+            strokeLinecap="round"
+            fill="none"
+            opacity="0.65"
           />
           <path
-            d="M-140,600 L1740,600 L1740,250 C1440,140 1150,160 890,270 C620,150 340,170 90,280 Z"
-            fill="var(--cloud-layer-secondary)"
-            opacity="0.88"
+            d="M1120,755 C860,810 610,705 330,765 C245,785 185,755 140,765"
+            stroke="var(--bamboo-green)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            fill="none"
+            opacity="0.55"
           />
         </svg>
       </div>
 
-      {/* Atmospheric Seal Emblem at Peak Coverage */}
+      {/* Central Ensō & Hanko Seal Medallion at Peak Coverage */}
       <div className="transition-emblem">
-        <span className="transition-kanji">{isToNight ? '夜' : '昼'}</span>
+        <div className="transition-enso-ring">
+          <svg viewBox="0 0 120 120" className="transition-enso-svg">
+            <path
+              d="M60,10 C88,9 111,32 110,61 C109,89 85,111 57,110 C29,109 9,86 11,58 C13,34 31,15 52,11"
+              fill="none"
+              stroke="var(--antique-gold)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeDasharray="280 24"
+            />
+          </svg>
+          <span className="transition-kanji">{isToNight ? '夜' : '昼'}</span>
+        </div>
         <span className="transition-caption">
           {isToNight ? 'Moonlit Sumi Scroll' : 'Sunlit Aged Parchment'}
         </span>

@@ -1,46 +1,65 @@
 import React from 'react';
 
 /**
- * Traditional Japanese Woodblock (Ukiyo-e) & Sumi-e Ink Wave Divider
+ * Traditional Japanese Woodblock (Ukiyo-e) & Seigaiha Ink-Wash Wave Divider
  *
- * Uses aged ivory negative space, irregular ink edges, and antique gold / moonlight crests.
+ * Uses soft vertical ink-wash gradients, curled wave crests, and antique-gold / moonlight foam contours
+ * so section transitions flow like a continuous painted scroll rather than a hard block.
  */
 export default function WaveDivider({ flip = false, variant = 'primary' }) {
+  const gradIdBack = `waveBackGrad-${variant}-${flip ? 'f' : 'n'}`;
+  const gradIdFront = `waveFrontGrad-${variant}-${flip ? 'f' : 'n'}`;
+
   return (
     <div
       className={`ukiyo-wave-divider ${flip ? 'wave-flipped' : ''} wave-${variant}`}
       aria-hidden="true"
     >
       <svg
-        viewBox="0 0 1440 135"
+        viewBox="0 0 1440 110"
         preserveAspectRatio="none"
         className="ukiyo-wave-svg"
       >
-        {/* Distant Ink Swell */}
+        <defs>
+          <linearGradient id={gradIdBack} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--wave-back)" stopOpacity="0.38" />
+            <stop offset="100%" stopColor="var(--bg-canvas)" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id={gradIdFront} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--wave-mid)" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="var(--bg-canvas)" stopOpacity="0.04" />
+          </linearGradient>
+        </defs>
+
+        {/* Distant Ink-Wash Swell */}
         <path
-          className="wave-layer-back"
-          d="M0,74 C160,18 320,120 510,64 C710,8 890,118 1110,56 C1260,14 1360,68 1440,52 L1440,135 L0,135 Z"
+          d="M0,54 C180,14 340,92 540,48 C740,6 920,90 1140,44 C1280,16 1370,54 1440,38 L1440,110 L0,110 Z"
+          fill={`url(#${gradIdBack})`}
         />
 
-        {/* Mid Woodblock Crest with Irregular Brush Contour */}
+        {/* Mid Ukiyo-e Sculpted Swell */}
         <path
-          className="wave-layer-mid"
-          d="M0,92 C190,42 340,124 560,78 C770,34 980,120 1210,72 C1320,50 1390,74 1440,86 L1440,135 L0,135 Z"
+          d="M0,68 C210,28 380,98 600,58 C810,20 1010,96 1230,54 C1335,34 1395,58 1440,66 L1440,110 L0,110 Z"
+          fill={`url(#${gradIdFront})`}
         />
 
-        {/* Antique Gold / Silver Moonlight Foam Line */}
+        {/* Delicate Sumi-e Brush Contour Line */}
         <path
-          className="wave-crest-accent"
-          d="M0,90 C190,40 340,122 560,76 C770,32 980,118 1210,70 C1320,48 1390,72 1440,84"
+          d="M0,54 C180,14 340,92 540,48 C740,6 920,90 1140,44 C1280,16 1370,54 1440,38"
           fill="none"
-          strokeWidth="2.2"
-          strokeDasharray="16 8 6 6"
+          stroke="var(--border-strong)"
+          strokeWidth="1.2"
+          opacity="0.55"
         />
 
-        {/* Foreground Deep Sumi Ink Wave */}
+        {/* Antique Gold / Moonlight Silver Crest Filigree */}
         <path
-          className="wave-layer-front"
-          d="M0,108 C220,76 430,132 690,98 C930,66 1170,128 1440,96 L1440,135 L0,135 Z"
+          d="M0,68 C210,28 380,98 600,58 C810,20 1010,96 1230,54 C1335,34 1395,58 1440,66"
+          fill="none"
+          stroke="var(--gold-accent)"
+          strokeWidth="1.6"
+          strokeDasharray="18 8 4 8"
+          opacity="0.65"
         />
       </svg>
     </div>

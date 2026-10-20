@@ -184,18 +184,27 @@ export default function BambooScrollIndicator({
   const growthPercentage = Math.round(growthProgress * 100);
   const tipY = Math.max(28, 536 - grownHeight);
 
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <aside
       className={`bamboo-scroll-rail direction-${scrollDirection} ${
         bursts.length > 0 ? 'bamboo-bonemeal-active' : ''
       }`}
       aria-label={`Bamboo vitality: ${growthPercentage}% (${renderedSegmentCount} of ${safeMax} segments)`}
-      title={`Bamboo Growth: ${growthPercentage}% (${renderedSegmentCount}/${safeMax} segments) — Scroll up to grow, scroll down to shrink`}
     >
-      <div className="bamboo-percentage-tag">
+      <button
+        type="button"
+        onClick={handleScrollToTop}
+        className="bamboo-percentage-tag"
+        title="Click to return to top & sprout full bamboo"
+        aria-label={`Bamboo growth ${growthPercentage}%. Click to scroll to top.`}
+      >
         <span className="bamboo-kanji">竹</span>
         <span className="bamboo-pct-num">{growthPercentage}%</span>
-      </div>
+      </button>
 
       <div className="bamboo-svg-wrapper">
         <svg viewBox="0 0 90 560" className="bamboo-svg" aria-hidden="true">

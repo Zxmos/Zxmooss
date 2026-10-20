@@ -21,13 +21,13 @@ function getInitialTheme() {
 }
 
 /**
- * Deterministic Day/Night Theme Transition State Machine (9A.3)
+ * Deterministic Day/Night Theme Transition State Machine
  *
  * Explicit States:
  * - IDLE: normal page interaction, overlay unmounted
- * - COVERING: clouds sweep across and cover 100% of the viewport
- * - SWITCHING: viewport is 100% covered; palette swaps seamlessly without flash
- * - REVEALING: clouds part to reveal the updated theme before returning to IDLE
+ * - COVERING: multi-layer Japanese Kasumi clouds sweep in from left & right to cover 100% of viewport
+ * - SWITCHING: viewport is 100% covered; palette swaps seamlessly behind the cloud curtain
+ * - REVEALING: clouds part smoothly in opposite directions to reveal the new theme
  */
 export function useThemeTransition() {
   const [theme, setTheme] = useState(getInitialTheme);
@@ -61,7 +61,7 @@ export function useThemeTransition() {
   }, [clearTimers]);
 
   const toggleTheme = useCallback(() => {
-    // Ignore overlapping toggle requests while transition is active
+    // Prevent overlapping toggle clicks while transition is in progress
     if (machineState !== 'IDLE') {
       return;
     }
@@ -85,11 +85,11 @@ export function useThemeTransition() {
 
     clearTimers();
 
-    // Phase 1: COVERING — clouds sweep in across the entire viewport
+    // Phase 1: COVERING (0ms -> 560ms) — Kasumi clouds converge from both sides to occlude 100% of screen
     setTransitionMeta({ direction, targetTheme: nextTheme });
     setMachineState('COVERING');
 
-    // Phase 2: SWITCHING — clouds cover 100% of viewport; swap theme variables cleanly
+    // Phase 2: SWITCHING (560ms -> 820ms) — 100% covered; swap palette while curtain is locked
     const switchTimer = window.setTimeout(() => {
       setMachineState('SWITCHING');
       setTheme(nextTheme);
@@ -98,17 +98,17 @@ export function useThemeTransition() {
           ? 'Night theme enabled (Midnight Sumi Ink)'
           : 'Day theme enabled (Sunlit Aged Parchment)'
       );
-    }, 520);
+    }, 560);
 
-    // Phase 3: REVEALING — clouds part to unveil the new scene
+    // Phase 3: REVEALING (820ms -> 1500ms) — clouds part smoothly to unveil the transformed scroll
     const revealTimer = window.setTimeout(() => {
       setMachineState('REVEALING');
-    }, 680);
+    }, 820);
 
-    // Phase 4: Return to IDLE & unmount overlay completely
+    // Phase 4: IDLE (1500ms) — unmount overlay completely so zero elements block interaction
     const idleTimer = window.setTimeout(() => {
       setMachineState('IDLE');
-    }, 1300);
+    }, 1500);
 
     timersRef.current = [switchTimer, revealTimer, idleTimer];
   }, [theme, machineState, clearTimers]);

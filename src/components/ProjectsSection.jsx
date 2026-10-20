@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   ExternalLink,
   CheckCircle2,
@@ -16,109 +16,178 @@ import {
 import { PROJECTS, PERSONAL_INFO } from '../data/portfolioData';
 
 /**
- * Custom Japanese Ink + Technical Schematic Artwork for each project
+ * High-Precision Engineering Schematic & Sumi-e Ink Blueprint Artwork for each project
  */
 function ProjectInkIllustration({ projectId }) {
   if (projectId === 'erecpass-mobile') {
     return (
       <svg
-        viewBox="0 0 520 240"
+        viewBox="0 0 540 250"
         className="project-ink-illustration"
         role="img"
-        aria-label="Ink illustration of ERecPass Mobile architecture connecting Mobile UI, Supabase Auth, and PostgreSQL RLS"
+        aria-label="Engineering blueprint of ERecPass Mobile connecting Capacitor Mobile Client, Supabase Auth JWT Gate, and PostgreSQL Row-Level Security tables"
       >
-        {/* Aged Parchment Grid & Ink Wash */}
+        <defs>
+          <pattern id=" gridErec" width="24" height="24" patternUnits="userSpaceOnUse">
+            <path
+              d="M 24 0 L 0 0 0 24"
+              fill="none"
+              stroke="var(--border-ink)"
+              strokeWidth="0.6"
+              opacity="0.45"
+            />
+          </pattern>
+        </defs>
+
+        {/* Subtle Architectural Grid & Ink Wash Base */}
+        <rect x="8" y="8" width="524" height="234" fill="url(#gridErec)" />
         <path
-          d="M15,195 Q140,165 270,190 T505,180 L505,235 L15,235 Z"
+          d="M8,205 C140,175 310,215 532,182 L532,242 L8,242 Z"
           fill="var(--mountain-far)"
-          opacity="0.35"
+          opacity="0.28"
         />
-        {/* Node 1: Mobile Scroll Card */}
-        <g transform="translate(36, 38)">
+
+        {/* Blueprint Header Stamp */}
+        <text x="22" y="26" fontSize="8.5" fill="var(--gold-accent)" fontFamily="var(--font-mono)" letterSpacing="0.08em">
+          ARCH // ERECPASS-MOBILE • HYBRID CAPACITOR + SUPABASE RLS
+        </text>
+
+        {/* Node 1: Capacitor Mobile Client */}
+        <g transform="translate(24, 44)">
           <rect
             x="0"
             y="0"
-            width="105"
-            height="145"
-            rx="6"
-            fill="var(--bg-scroll-panel)"
+            width="126"
+            height="162"
+            rx="4"
+            fill="var(--bg-canvas)"
             stroke="var(--ink-strong)"
-            strokeWidth="2.2"
+            strokeWidth="1.8"
           />
-          <line x1="20" y1="22" x2="85" y2="22" stroke="var(--gold-accent)" strokeWidth="3" />
-          <circle cx="52" cy="58" r="18" fill="none" stroke="var(--bamboo-green)" strokeWidth="2" />
-          <path d="M45,58 L50,63 L61,52" stroke="var(--bamboo-green)" strokeWidth="2.2" fill="none" />
-          <line x1="22" y1="95" x2="83" y2="95" stroke="var(--ink-muted)" strokeWidth="2" />
-          <line x1="22" y1="112" x2="68" y2="112" stroke="var(--ink-muted)" strokeWidth="2" />
-          <text x="52" y="135" textAnchor="middle" fontSize="10" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
-            Capacitor UI
+          <rect x="0" y="0" width="126" height="24" rx="4" fill="var(--ink-strong)" />
+          <text x="63" y="15.5" textAnchor="middle" fontSize="9" fontWeight="700" fill="var(--bg-canvas)" fontFamily="var(--font-mono)">
+            CAPACITOR 7 UI
+          </text>
+
+          {/* Emergency Status Badge Inside Screen */}
+          <rect x="12" y="34" width="102" height="32" rx="3" fill="var(--bg-subpanel-glass)" stroke="var(--bamboo-green)" strokeWidth="1.2" />
+          <circle cx="24" cy="50" r="4.5" fill="var(--bamboo-green)" />
+          <text x="34" y="47" fontSize="8.5" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+            PASS: GREEN
+          </text>
+          <text x="34" y="58" fontSize="7.5" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            Patient Verified
+          </text>
+
+          {/* LocalStorage & Sync Layer */}
+          <rect x="12" y="76" width="102" height="34" rx="3" fill="none" stroke="var(--border-strong)" strokeWidth="1" strokeDasharray="3 2" />
+          <text x="63" y="91" textAnchor="middle" fontSize="8" fontWeight="600" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+            Appointment Form
+          </text>
+          <text x="63" y="102" textAnchor="middle" fontSize="7.2" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            Offline Fallback
+          </text>
+
+          <line x1="14" y1="126" x2="112" y2="126" stroke="var(--border-ink)" strokeWidth="1" />
+          <text x="63" y="142" textAnchor="middle" fontSize="8" fill="var(--gold-accent)" fontFamily="var(--font-mono)">
+            Android / iOS WebView
           </text>
         </g>
 
-        {/* Flowing Ink Brush Connection 1 */}
-        <path
-          d="M148,110 C175,95 190,95 215,110"
-          stroke="var(--gold-accent)"
-          strokeWidth="2.5"
-          strokeDasharray="5 4"
-          fill="none"
-        />
+        {/* Bus 1: HTTPS / JWT Session Bus */}
+        <g>
+          <path
+            d="M150,112 L212,112"
+            stroke="var(--gold-accent)"
+            strokeWidth="2"
+            strokeDasharray="4 3"
+            fill="none"
+          />
+          <polygon points="212,112 205,108 205,116" fill="var(--gold-accent)" />
+          <text x="181" y="103" textAnchor="middle" fontSize="7.5" fill="var(--gold-accent)" fontFamily="var(--font-mono)">
+            JWT Bearer
+          </text>
+        </g>
 
-        {/* Node 2: Supabase Auth Gate (Torii-inspired Seal) */}
-        <g transform="translate(220, 52)">
+        {/* Node 2: Supabase Auth Security Gate */}
+        <g transform="translate(214, 58)">
           <rect
             x="0"
             y="0"
-            width="96"
-            height="115"
+            width="112"
+            height="134"
             rx="4"
-            fill="var(--bg-scroll-panel)"
+            fill="var(--bg-canvas)"
             stroke="var(--ink-strong)"
-            strokeWidth="2"
+            strokeWidth="1.8"
           />
-          <path d="M12,24 L84,24 M18,32 L78,32" stroke="var(--seal-red)" strokeWidth="3" strokeLinecap="round" />
-          <text x="48" y="64" textAnchor="middle" fontSize="11" fontWeight="600" fill="var(--ink-strong)">
+          {/* Torii-Inspired Security Header Bar */}
+          <path d="M10,18 L102,18 M16,25 L96,25" stroke="var(--seal-red)" strokeWidth="2.4" strokeLinecap="round" />
+          <text x="56" y="45" textAnchor="middle" fontSize="9.5" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+            SUPABASE AUTH
+          </text>
+          <rect x="14" y="56" width="84" height="28" rx="3" fill="var(--gold-soft)" stroke="var(--gold-accent)" strokeWidth="1" />
+          <text x="56" y="74" textAnchor="middle" fontSize="9" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
             auth.uid()
           </text>
-          <text x="48" y="84" textAnchor="middle" fontSize="9.5" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
-            Supabase Auth
+          <text x="56" y="104" textAnchor="middle" fontSize="7.8" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            UUID Session Policy
+          </text>
+          <text x="56" y="118" textAnchor="middle" fontSize="7.5" fill="var(--bamboo-green)" fontFamily="var(--font-mono)">
+            RLS Enforcement
           </text>
         </g>
 
-        {/* Flowing Ink Brush Connection 2 */}
-        <path
-          d="M322,110 C345,125 362,125 384,110"
-          stroke="var(--bamboo-green)"
-          strokeWidth="2.5"
-          strokeDasharray="5 4"
-          fill="none"
-        />
+        {/* Bus 2: Scoped SQL Query Bus */}
+        <g>
+          <path
+            d="M326,112 L386,112"
+            stroke="var(--bamboo-green)"
+            strokeWidth="2"
+            strokeDasharray="4 3"
+            fill="none"
+          />
+          <polygon points="386,112 379,108 379,116" fill="var(--bamboo-green)" />
+          <text x="356" y="103" textAnchor="middle" fontSize="7.5" fill="var(--bamboo-green)" fontFamily="var(--font-mono)">
+            RLS Policy
+          </text>
+        </g>
 
-        {/* Node 3: PostgreSQL RLS Vault */}
-        <g transform="translate(388, 38)">
+        {/* Node 3: PostgreSQL Relational Vault */}
+        <g transform="translate(388, 44)">
           <rect
             x="0"
             y="0"
-            width="104"
-            height="145"
+            width="128"
+            height="162"
             rx="4"
-            fill="var(--bg-scroll-panel)"
+            fill="var(--bg-canvas)"
             stroke="var(--ink-strong)"
-            strokeWidth="2.2"
+            strokeWidth="1.8"
           />
-          <text x="52" y="30" textAnchor="middle" fontSize="10.5" fontWeight="700" fill="var(--gold-accent)" fontFamily="var(--font-mono)">
-            PostgreSQL
+          <rect x="0" y="0" width="128" height="24" rx="4" fill="var(--bamboo-deep)" />
+          <text x="64" y="15.5" textAnchor="middle" fontSize="9" fontWeight="700" fill="#F5EFE2" fontFamily="var(--font-mono)">
+            POSTGRESQL DB
           </text>
-          <rect x="14" y="44" width="76" height="28" rx="3" fill="none" stroke="var(--bamboo-green)" strokeWidth="1.5" />
-          <text x="52" y="62" textAnchor="middle" fontSize="9.5" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
-            patients (RLS)
+
+          <rect x="12" y="36" width="104" height="44" rx="3" fill="none" stroke="var(--bamboo-green)" strokeWidth="1.3" />
+          <text x="64" y="53" textAnchor="middle" fontSize="8.8" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+            public.patients
           </text>
-          <rect x="14" y="82" width="76" height="28" rx="3" fill="none" stroke="var(--bamboo-green)" strokeWidth="1.5" />
-          <text x="52" y="100" textAnchor="middle" fontSize="9.5" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
-            appointments
+          <text x="64" y="68" textAnchor="middle" fontSize="7.2" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            FK: auth_user_id
           </text>
-          <text x="52" y="132" textAnchor="middle" fontSize="9" fill="var(--ink-muted)">
-            Scoped by User ID
+
+          <rect x="12" y="90" width="104" height="44" rx="3" fill="none" stroke="var(--gold-accent)" strokeWidth="1.3" />
+          <text x="64" y="107" textAnchor="middle" fontSize="8.8" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+            public.appointments
+          </text>
+          <text x="64" y="122" textAnchor="middle" fontSize="7.2" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            FK: user_id (Scoped)
+          </text>
+
+          <text x="64" y="150" textAnchor="middle" fontSize="7.5" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            Strict Tenant Isolation
           </text>
         </g>
       </svg>
@@ -128,105 +197,204 @@ function ProjectInkIllustration({ projectId }) {
   if (projectId === 'esp32-s3-sensor-system') {
     return (
       <svg
-        viewBox="0 0 520 240"
+        viewBox="0 0 540 250"
         className="project-ink-illustration"
         role="img"
-        aria-label="Ink schematic of ESP32-S3 connected to AMG8833 thermal sensor, INMP441 microphone, WS2812B LED, vibration motor, push button, and 18650 battery"
+        aria-label="Hardware schematic of ESP32-S3 microcontroller connected to AMG8833 thermal array, INMP441 I2S microphone, push button, WS2812B RGB LED, vibration motor, and 18650 battery"
       >
-        {/* Background Ink Wave Wash */}
-        <path
-          d="M10,200 Q160,170 310,198 T510,185 L510,235 L10,235 Z"
-          fill="var(--mountain-far)"
-          opacity="0.35"
-        />
+        <defs>
+          <pattern id="gridEsp" width="24" height="24" patternUnits="userSpaceOnUse">
+            <path
+              d="M 24 0 L 0 0 0 24"
+              fill="none"
+              stroke="var(--border-ink)"
+              strokeWidth="0.6"
+              opacity="0.45"
+            />
+          </pattern>
+        </defs>
 
-        {/* Left Inputs: AMG8833, INMP441, Push Button */}
-        <g transform="translate(22, 24)">
-          <rect x="0" y="0" width="128" height="44" rx="4" fill="var(--bg-scroll-panel)" stroke="var(--ink-strong)" strokeWidth="1.8" />
-          <text x="64" y="20" textAnchor="middle" fontSize="10.5" fontWeight="600" fill="var(--ink-strong)">AMG8833 Thermal</text>
-          <text x="64" y="35" textAnchor="middle" fontSize="9" fill="var(--gold-accent)" fontFamily="var(--font-mono)">I2C 8x8 IR Matrix</text>
+        <rect x="8" y="8" width="524" height="234" fill="url(#gridEsp)" />
+        <text x="22" y="25" fontSize="8.5" fill="var(--gold-accent)" fontFamily="var(--font-mono)" letterSpacing="0.08em">
+          SCHEMATIC // ESP32-S3 MULTI-MODAL SENSOR &amp; HAPTIC NODE
+        </text>
 
-          <rect x="0" y="62" width="128" height="44" rx="4" fill="var(--bg-scroll-panel)" stroke="var(--ink-strong)" strokeWidth="1.8" />
-          <text x="64" y="82" textAnchor="middle" fontSize="10.5" fontWeight="600" fill="var(--ink-strong)">INMP441 Mic</text>
-          <text x="64" y="97" textAnchor="middle" fontSize="9" fill="var(--bamboo-green)" fontFamily="var(--font-mono)">I2S Digital Audio</text>
+        {/* Left Peripherals (Inputs) */}
+        <g transform="translate(20, 38)">
+          {/* AMG8833 */}
+          <rect x="0" y="0" width="136" height="48" rx="3" fill="var(--bg-canvas)" stroke="var(--ink-strong)" strokeWidth="1.6" />
+          <text x="12" y="19" fontSize="9.5" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+            AMG8833 IR 8×8
+          </text>
+          <text x="12" y="34" fontSize="7.8" fill="var(--gold-accent)" fontFamily="var(--font-mono)">
+            I2C Bus (SDA / SCL)
+          </text>
 
-          <rect x="0" y="124" width="128" height="44" rx="4" fill="var(--bg-scroll-panel)" stroke="var(--ink-strong)" strokeWidth="1.8" />
-          <text x="64" y="144" textAnchor="middle" fontSize="10.5" fontWeight="600" fill="var(--ink-strong)">Push Button</text>
-          <text x="64" y="159" textAnchor="middle" fontSize="9" fill="var(--ink-muted)" fontFamily="var(--font-mono)">GPIO Trigger Input</text>
+          {/* INMP441 */}
+          <rect x="0" y="60" width="136" height="48" rx="3" fill="var(--bg-canvas)" stroke="var(--ink-strong)" strokeWidth="1.6" />
+          <text x="12" y="79" fontSize="9.5" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+            INMP441 MEMS Mic
+          </text>
+          <text x="12" y="94" fontSize="7.8" fill="var(--bamboo-green)" fontFamily="var(--font-mono)">
+            I2S Bus (WS / SCK / SD)
+          </text>
+
+          {/* Tactile Push Button */}
+          <rect x="0" y="120" width="136" height="48" rx="3" fill="var(--bg-canvas)" stroke="var(--ink-strong)" strokeWidth="1.6" />
+          <text x="12" y="139" fontSize="9.5" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+            Tactile Button
+          </text>
+          <text x="12" y="154" fontSize="7.8" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            GPIO Hardware ISR
+          </text>
         </g>
 
-        {/* Center MCU: ESP32-S3 */}
-        <g transform="translate(198, 42)">
-          <rect x="0" y="0" width="124" height="148" rx="6" fill="var(--bg-scroll-panel)" stroke="var(--ink-strong)" strokeWidth="2.6" />
-          <rect x="16" y="16" width="92" height="58" rx="3" fill="none" stroke="var(--gold-accent)" strokeWidth="1.6" />
-          <text x="62" y="44" textAnchor="middle" fontSize="13" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+        {/* Center Microcontroller Unit: ESP32-S3 */}
+        <g transform="translate(202, 38)">
+          <rect x="0" y="0" width="136" height="168" rx="5" fill="var(--bg-canvas)" stroke="var(--ink-strong)" strokeWidth="2.2" />
+          <rect x="14" y="14" width="108" height="72" rx="3" fill="var(--bg-subpanel-glass)" stroke="var(--gold-accent)" strokeWidth="1.4" />
+          <text x="68" y="42" textAnchor="middle" fontSize="13" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
             ESP32-S3
           </text>
-          <text x="62" y="62" textAnchor="middle" fontSize="8.5" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
-            Built-in RGB LED
+          <text x="68" y="58" textAnchor="middle" fontSize="8" fill="var(--gold-accent)" fontFamily="var(--font-mono)">
+            Dual-Core Xtensa LX7
           </text>
-          <line x1="20" y1="96" x2="104" y2="96" stroke="var(--border-ink)" strokeWidth="1.5" />
-          <text x="62" y="116" textAnchor="middle" fontSize="9.5" fontWeight="600" fill="var(--bamboo-green)" fontFamily="var(--font-mono)">
-            18650 Li-Ion
+          <text x="68" y="74" textAnchor="middle" fontSize="7.5" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            + Onboard RGB Status LED
           </text>
-          <text x="62" y="132" textAnchor="middle" fontSize="8.5" fill="var(--ink-muted)">
-            Portable Power Rail
+
+          {/* Power Supply Module */}
+          <rect x="14" y="100" width="108" height="52" rx="3" fill="none" stroke="var(--bamboo-green)" strokeWidth="1.3" />
+          <text x="68" y="122" textAnchor="middle" fontSize="9.2" fontWeight="700" fill="var(--bamboo-green)" fontFamily="var(--font-mono)">
+            18650 Li-Ion Cell
+          </text>
+          <text x="68" y="138" textAnchor="middle" fontSize="7.5" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            3.7V Portable Power Rail
           </text>
         </g>
 
-        {/* Right Outputs: WS2812B & Vibration Motor */}
-        <g transform="translate(370, 38)">
-          <rect x="0" y="0" width="128" height="62" rx="4" fill="var(--bg-scroll-panel)" stroke="var(--ink-strong)" strokeWidth="1.8" />
-          <text x="64" y="25" textAnchor="middle" fontSize="10.5" fontWeight="600" fill="var(--ink-strong)">WS2812B RGB LED</text>
-          <text x="64" y="43" textAnchor="middle" fontSize="9" fill="var(--gold-accent)" fontFamily="var(--font-mono)">Visual Status Pulse</text>
+        {/* Right Peripherals (Actuators & Visual/Haptic Outputs) */}
+        <g transform="translate(384, 48)">
+          <rect x="0" y="0" width="136" height="64" rx="3" fill="var(--bg-canvas)" stroke="var(--ink-strong)" strokeWidth="1.6" />
+          <text x="12" y="23" fontSize="9.5" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+            WS2812B RGB LED
+          </text>
+          <text x="12" y="39" fontSize="7.8" fill="var(--gold-accent)" fontFamily="var(--font-mono)">
+            800kHz Single-Wire RMT
+          </text>
+          <text x="12" y="53" fontSize="7.2" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            Thermal / Audio Visual Alert
+          </text>
 
-          <rect x="0" y="84" width="128" height="62" rx="4" fill="var(--bg-scroll-panel)" stroke="var(--ink-strong)" strokeWidth="1.8" />
-          <text x="64" y="109" textAnchor="middle" fontSize="10.5" fontWeight="600" fill="var(--ink-strong)">Vibration Motor</text>
-          <text x="64" y="127" textAnchor="middle" fontSize="9" fill="var(--bamboo-green)" fontFamily="var(--font-mono)">Haptic Alert Output</text>
+          <rect x="0" y="84" width="136" height="64" rx="3" fill="var(--bg-canvas)" stroke="var(--ink-strong)" strokeWidth="1.6" />
+          <text x="12" y="107" fontSize="9.5" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+            Vibration Motor
+          </text>
+          <text x="12" y="123" fontSize="7.8" fill="var(--bamboo-green)" fontFamily="var(--font-mono)">
+            PWM / Transistor Driver
+          </text>
+          <text x="12" y="137" fontSize="7.2" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+            Tactile Haptic Feedback
+          </text>
         </g>
 
-        {/* Connecting Ink Traces */}
-        <path d="M150,46 L198,72 M150,108 L198,108 M150,168 L198,142" stroke="var(--gold-accent)" strokeWidth="2" fill="none" />
-        <path d="M322,86 L370,68 M322,130 L370,148" stroke="var(--bamboo-green)" strokeWidth="2" fill="none" />
+        {/* Signal Bus Traces */}
+        <path d="M156,62 L202,62 M156,122 L202,122 M156,182 L202,162" stroke="var(--gold-accent)" strokeWidth="1.8" fill="none" />
+        <path d="M338,80 L384,80 M338,148 L384,164" stroke="var(--bamboo-green)" strokeWidth="1.8" fill="none" />
       </svg>
     );
   }
 
   return (
     <svg
-      viewBox="0 0 520 240"
+      viewBox="0 0 540 250"
       className="project-ink-illustration"
       role="img"
-      aria-label="Sumi-e landscape and bamboo scroll illustration"
+      aria-label="Architecture diagram of the Sumi-e Portfolio State Machine and Bamboo Scroll Engine"
     >
-      <circle cx="410" cy="68" r="34" fill="var(--gold-accent)" opacity="0.55" />
       <path
-        d="M0,185 L120,95 L245,155 L390,72 L520,165 L520,240 L0,240 Z"
+        d="M8,195 C150,150 320,210 532,165 L532,242 L8,242 Z"
         fill="var(--mountain-mid)"
-        opacity="0.65"
+        opacity="0.35"
       />
-      <path
-        d="M0,210 C150,165 340,225 520,175 L520,240 L0,240 Z"
-        fill="var(--mountain-near)"
-      />
-      <text x="42" y="75" fontSize="15" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-display)">
-        Sumi-e Day &amp; Night Scroll Engine
+      <circle cx="445" cy="72" r="32" fill="var(--gold-accent)" opacity="0.35" />
+
+      <text x="24" y="32" fontSize="8.5" fill="var(--gold-accent)" fontFamily="var(--font-mono)" letterSpacing="0.08em">
+        ENGINE // DETERMINISTIC SCROLL &amp; THEME STATE MACHINE
       </text>
-      <text x="42" y="102" fontSize="11" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
-        React 19 • SVG Cloud Transitions • Bamboo Scroll Tracker
-      </text>
+
+      {/* State Machine Pipeline Boxes */}
+      <g transform="translate(24, 56)">
+        <rect x="0" y="0" width="148" height="118" rx="4" fill="var(--bg-canvas)" stroke="var(--ink-strong)" strokeWidth="1.6" />
+        <text x="74" y="26" textAnchor="middle" fontSize="9.5" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+          BAMBOO CONTROLLER
+        </text>
+        <text x="74" y="48" textAnchor="middle" fontSize="8" fill="var(--bamboo-green)" fontFamily="var(--font-mono)">
+          2–12 Dynamic Segments
+        </text>
+        <text x="74" y="68" textAnchor="middle" fontSize="7.8" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+          Scroll Up: Sprout + Burst
+        </text>
+        <text x="74" y="84" textAnchor="middle" fontSize="7.8" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+          Scroll Down: Retract
+        </text>
+      </g>
+
+      <g transform="translate(196, 56)">
+        <rect x="0" y="0" width="148" height="118" rx="4" fill="var(--bg-canvas)" stroke="var(--ink-strong)" strokeWidth="1.6" />
+        <text x="74" y="26" textAnchor="middle" fontSize="9.5" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+          KASUMI TRANSITION
+        </text>
+        <text x="74" y="48" textAnchor="middle" fontSize="8" fill="var(--gold-accent)" fontFamily="var(--font-mono)">
+          IDLE → COVERING
+        </text>
+        <text x="74" y="66" textAnchor="middle" fontSize="8" fill="var(--gold-accent)" fontFamily="var(--font-mono)">
+          SWITCHING → REVEALING
+        </text>
+        <text x="74" y="86" textAnchor="middle" fontSize="7.5" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+          100% Viewport Occlusion
+        </text>
+      </g>
+
+      <g transform="translate(368, 56)">
+        <rect x="0" y="0" width="148" height="118" rx="4" fill="var(--bg-canvas)" stroke="var(--ink-strong)" strokeWidth="1.6" />
+        <text x="74" y="26" textAnchor="middle" fontSize="9.5" fontWeight="700" fill="var(--ink-strong)" fontFamily="var(--font-mono)">
+          LIVE GITHUB SYNC
+        </text>
+        <text x="74" y="48" textAnchor="middle" fontSize="8" fill="var(--bamboo-green)" fontFamily="var(--font-mono)">
+          REST API v3 (@Zxmos)
+        </text>
+        <text x="74" y="68" textAnchor="middle" fontSize="7.8" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+          Session Cache + Fallback
+        </text>
+        <text x="74" y="84" textAnchor="middle" fontSize="7.8" fill="var(--ink-muted)" fontFamily="var(--font-mono)">
+          GitHub Pages CI/CD
+        </text>
+      </g>
     </svg>
   );
 }
 
 export default function ProjectsSection({ githubData }) {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('ALL');
+
   const ghProfile = githubData?.profile;
   const ghRepos = githubData?.repos || [];
   const ghStatus = githubData?.status || 'loading';
   const refreshGitHub = githubData?.refreshGitHub;
 
-  // Close modal on Escape key
+  const categories = useMemo(() => {
+    const unique = Array.from(new Set(PROJECTS.map((p) => p.category)));
+    return ['ALL', ...unique];
+  }, []);
+
+  const filteredProjects = useMemo(() => {
+    if (activeCategory === 'ALL') return PROJECTS;
+    return PROJECTS.filter((p) => p.category === activeCategory);
+  }, [activeCategory]);
+
+  // Close modal on Escape key & lock background scroll while open
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -234,34 +402,62 @@ export default function ProjectsSection({ githubData }) {
       }
     };
     if (selectedProject) {
+      document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
     }
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [selectedProject]);
 
   return (
     <section id="projects" className="scroll-section projects-scroll-section">
       <div className="scroll-container">
-        <div className="scroll-section-header">
-          <span className="section-scroll-tag">Chapter III • 作</span>
-          <h2 className="section-brush-title">Paintings of Engineering</h2>
-          <p className="section-brush-subtitle">
-            Each project is documented with its real architecture, verified hardware and
-            software components, engineering challenges, and transparent development status.
-          </p>
+        <div className="projects-header-row">
+          <div className="scroll-section-header">
+            <span className="section-scroll-tag">Chapter III • 作</span>
+            <h2 className="section-brush-title">Paintings of Engineering</h2>
+            <p className="section-brush-subtitle">
+              Each project is documented with its real architecture, verified hardware and
+              software components, engineering challenges, and transparent development status.
+            </p>
+          </div>
+
+          {/* Interactive Category Filter Bar */}
+          <div
+            className="project-filter-tabs"
+            role="tablist"
+            aria-label="Filter projects by engineering discipline"
+          >
+            {categories.map((cat) => {
+              const isSelected = activeCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  role="tab"
+                  aria-selected={isSelected}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`filter-tab-btn ${isSelected ? 'tab-active' : ''}`}
+                >
+                  {cat === 'ALL' ? `All Scrolls (${PROJECTS.length})` : cat}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="projects-scroll-list">
-          {PROJECTS.map((project) => (
+          {filteredProjects.map((project) => (
             <article
               key={project.id}
               className={`project-scroll-masterpiece ${
                 project.featured ? 'project-featured' : ''
               }`}
             >
-              {/* Decorative Drifting Cloud Accent on Hover */}
-              <div className="project-hover-cloud" aria-hidden="true" />
-
               {/* Left / Top Illustration & Scroll Seal */}
               <div className="project-artwork-pane">
                 <div className="project-scroll-number-banner">
@@ -298,9 +494,22 @@ export default function ProjectsSection({ githubData }) {
 
                 <h3 className="project-brush-heading">
                   <span className="project-title-text">{project.title}</span>
-                  <span className="bamboo-hover-leaf" aria-hidden="true">
-                    🎋
-                  </span>
+                  {/* Custom Sumi-e SVG Bamboo Leaf Calligraphy Ornament */}
+                  <svg
+                    viewBox="0 0 28 18"
+                    className="bamboo-hover-ornament"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2,14 Q12,3 26,4 Q15,13 2,14 Z"
+                      fill="var(--bamboo-green)"
+                    />
+                    <path
+                      d="M6,15 Q16,10 24,12 Q15,17 6,15 Z"
+                      fill="var(--gold-accent)"
+                      opacity="0.8"
+                    />
+                  </svg>
                 </h3>
 
                 <p className="project-subtitle-text">{project.subtitle}</p>
@@ -357,7 +566,7 @@ export default function ProjectsSection({ githubData }) {
                     className="btn-sumi-primary btn-compact"
                   >
                     <BookOpen size={15} />
-                    <span>Inspect Full Engineering Scroll</span>
+                    <span>Inspect Engineering Scroll</span>
                   </button>
 
                   {project.repoUrl && (

@@ -1,9 +1,13 @@
 import React from 'react';
+import { ArrowUp } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
 export default function ScrollFooter() {
+  const handleBackToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <footer className="scroll-footer">
@@ -29,10 +33,21 @@ export default function ScrollFooter() {
           >
             github.com/{PERSONAL_INFO.githubUsername}
           </a>
-          <span className="footer-divider" aria-hidden="true">•</span>
+          <span className="footer-divider" aria-hidden="true">
+            •
+          </span>
           <span className="footer-copyright">
             &copy; {CURRENT_YEAR} {PERSONAL_INFO.name}
           </span>
+          <button
+            type="button"
+            onClick={handleBackToTop}
+            className="footer-top-btn"
+            aria-label="Return to top of scroll"
+          >
+            <ArrowUp size={13} />
+            <span>Top</span>
+          </button>
         </div>
       </div>
     </footer>
