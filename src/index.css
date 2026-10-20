@@ -1388,13 +1388,15 @@ button:focus-visible {
   filter: contrast(1.05) brightness(1.02);
 }
 
-.gear5-actual-portrait.portrait-active {
+.gear5-actual-portrait.portrait-active,
+.gear5-actual-portrait.portrait-layer-active {
   opacity: 1;
   transform: scale(1.03);
   z-index: 2;
 }
 
-.gear5-actual-portrait.portrait-inactive {
+.gear5-actual-portrait.portrait-inactive,
+.gear5-actual-portrait.portrait-layer-hidden {
   opacity: 0;
   transform: scale(0.95);
   z-index: 1;
@@ -1419,7 +1421,8 @@ button:focus-visible {
   transition: opacity 0.32s ease, transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.portrait-swap-cloud-veil.veil-active {
+.portrait-swap-cloud-veil.veil-active,
+.portrait-swap-cloud-veil.veil-covering {
   opacity: 1;
   transform: scale(1.12);
 }

@@ -26,10 +26,10 @@ const GEAR5_SPARKS = [
  */
 export default function Gear5CloudPortrait({ theme, transitionState }) {
   const [lightSrc, setLightSrc] = useState(
-    PERSONAL_INFO.profilePhotoLight || './images/profile-headphones.png'
+    PERSONAL_INFO.profilePhotoLight || '/images/profile-headphones.webp'
   );
   const [darkSrc, setDarkSrc] = useState(
-    PERSONAL_INFO.profilePhotoDark || './images/profile-strawhat.png'
+    PERSONAL_INFO.profilePhotoDark || '/images/profile-strawhat.jpg'
   );
 
   // Preload both portraits on mount for instantaneous zero-flicker switching
@@ -41,16 +41,16 @@ export default function Gear5CloudPortrait({ theme, transitionState }) {
   }, [lightSrc, darkSrc]);
 
   const handleLightError = () => {
-    if (lightSrc !== './images/profile-headphones.webp') {
-      setLightSrc('./images/profile-headphones.webp');
+    if (lightSrc !== '/images/profile-headphones.png') {
+      setLightSrc('/images/profile-headphones.png');
     } else if (lightSrc !== PERSONAL_INFO.githubAvatar) {
       setLightSrc(PERSONAL_INFO.githubAvatar);
     }
   };
 
   const handleDarkError = () => {
-    if (darkSrc !== './images/profile-strawhat.jpg') {
-      setDarkSrc('./images/profile-strawhat.jpg');
+    if (darkSrc !== '/images/profile-strawhat.png') {
+      setDarkSrc('/images/profile-strawhat.png');
     } else if (darkSrc !== PERSONAL_INFO.githubAvatar) {
       setDarkSrc(PERSONAL_INFO.githubAvatar);
     }
@@ -174,14 +174,19 @@ export default function Gear5CloudPortrait({ theme, transitionState }) {
         <div className="gear5-inner-halo" aria-hidden="true" />
 
         <div className="gear5-image-clipper">
-          {/* Light Mode Portrait: Headphones Photograph */}
+          {/* Light Mode Portrait: Normal Headphones Photograph */}
           <img
             src={lightSrc}
             onError={handleLightError}
-            alt="Mark Anthony L. Duhig Jr. wearing headphones (Light Mode portrait)"
+            alt="Mark Anthony L. Duhig Jr. wearing headphones (Day Mode portrait)"
             className={`gear5-actual-portrait portrait-layer-light ${
-              !isNight ? 'portrait-layer-active' : 'portrait-layer-hidden'
+              !isNight ? 'portrait-active portrait-layer-active' : 'portrait-inactive portrait-layer-hidden'
             }`}
+            style={{
+              opacity: isNight ? 0 : 1,
+              zIndex: isNight ? 1 : 2,
+              pointerEvents: isNight ? 'none' : 'auto',
+            }}
             loading="eager"
           />
 
@@ -189,17 +194,22 @@ export default function Gear5CloudPortrait({ theme, transitionState }) {
           <img
             src={darkSrc}
             onError={handleDarkError}
-            alt="Mark Anthony L. Duhig Jr. wearing straw hat (Dark Mode Gear 5 portrait)"
+            alt="Mark Anthony L. Duhig Jr. wearing straw hat (Night Mode Gear 5 portrait)"
             className={`gear5-actual-portrait portrait-layer-dark ${
-              isNight ? 'portrait-layer-active' : 'portrait-layer-hidden'
+              isNight ? 'portrait-active portrait-layer-active' : 'portrait-inactive portrait-layer-hidden'
             }`}
+            style={{
+              opacity: isNight ? 1 : 0,
+              zIndex: isNight ? 2 : 1,
+              pointerEvents: isNight ? 'auto' : 'none',
+            }}
             loading="eager"
           />
 
           {/* Local Cloud Curtain that veils the portrait during the exact swap moment */}
           <div
             className={`portrait-swap-cloud-veil ${
-              isTransforming ? 'veil-covering' : ''
+              isTransforming ? 'veil-active veil-covering' : ''
             }`}
             aria-hidden="true"
           />
